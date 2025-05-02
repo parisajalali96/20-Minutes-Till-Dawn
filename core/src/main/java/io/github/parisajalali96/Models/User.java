@@ -1,4 +1,4 @@
-package models;
+package io.github.parisajalali96.Models;
 
 public class User {
     private String username;

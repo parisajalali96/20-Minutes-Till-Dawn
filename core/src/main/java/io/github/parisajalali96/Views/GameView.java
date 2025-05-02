@@ -1,4 +1,4 @@
-package views;
+package io.github.parisajalali96.Views;
 
 public class GameView {
 }

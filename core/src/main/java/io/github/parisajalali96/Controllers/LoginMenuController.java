@@ -1,6 +1,6 @@
-package controllers;
+package io.github.parisajalali96.Controllers;
 
-import models.*;
+import io.github.parisajalali96.Models.*;
 
 import java.io.IOException;
 

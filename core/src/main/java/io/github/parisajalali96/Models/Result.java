@@ -1,4 +1,4 @@
-package models;
+package io.github.parisajalali96.Models;
 
 public class Result {
     private final boolean success;

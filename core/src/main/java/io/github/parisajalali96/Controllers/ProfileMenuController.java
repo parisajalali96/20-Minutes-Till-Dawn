@@ -1,6 +1,9 @@
-package controllers;
+package io.github.parisajalali96.Controllers;
 
-import models.*;
+import io.github.parisajalali96.Models.Game;
+import io.github.parisajalali96.Models.Player;
+import io.github.parisajalali96.Models.Result;
+import io.github.parisajalali96.Models.UserStorage;
 import models.Enums.Hero;
 
 import java.io.IOException;

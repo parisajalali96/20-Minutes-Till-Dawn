@@ -1,6 +1,6 @@
-package controllers;
+package io.github.parisajalali96.Controllers;
 
-import models.*;
+import io.github.parisajalali96.Models.*;
 
 import java.io.IOException;
 import java.util.Random;
@@ -50,7 +50,7 @@ public class RegisterMenuController {
         return new Result(true, "");
     }
 
-    
+
     //set security question answer
     public Result securityAnswer(User user, String answer){
         user.setSA(answer);

@@ -1,4 +1,4 @@
-package models;
+package io.github.parisajalali96.Models;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -54,3 +54,4 @@ public class UserStorage {
     }
 
 }
+

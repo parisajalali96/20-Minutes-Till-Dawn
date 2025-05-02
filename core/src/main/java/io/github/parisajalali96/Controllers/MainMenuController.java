@@ -1,11 +1,27 @@
-package controllers;
+package io.github.parisajalali96.Controllers;
 
+import io.github.parisajalali96.Main;
+import io.github.parisajalali96.Models.Game;
+import io.github.parisajalali96.Models.Result;
+import io.github.parisajalali96.Views.MainMenu;
 import models.Enums.Menu;
-import models.Game;
-import models.Result;
+
 
 public class MainMenuController {
+    private MainMenu view;
 
+    public void setView(MainMenu view) {
+        this.view = view;
+    }
+
+    public void handleMainMenuButton() {
+        Main main = new Main();
+        if(view != null) {
+            if(view.getPlayButton().isChecked() && view.getPlayButton().getText().equals("Play")) {
+               // main.getScreen().dispose();
+            }
+        }
+    }
     //set current menu
     public Result setCurrentMenu(Menu menu){
         if(menu == Menu.SettingsMenu || menu == Menu.ProfileMenu ||

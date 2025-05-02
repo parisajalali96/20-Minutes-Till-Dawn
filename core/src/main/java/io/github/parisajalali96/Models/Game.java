@@ -1,5 +1,7 @@
-package models;
+package io.github.parisajalali96.Models;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import models.Enums.GameTime;
 import models.Enums.Menu;
 
@@ -9,11 +11,11 @@ import java.util.List;
 
 public class Game {
 
+
     private static GameTime time = GameTime.TWENTY;
     private static Player currentPlayer;
     private static ArrayList<Player> players;
     private static Menu currentMenu;
-
 
     public static List<User> getRegisteredUsers() throws IOException {
         return UserStorage.loadUsers();

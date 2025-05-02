@@ -1,6 +1,7 @@
-package controllers;
+package io.github.parisajalali96.Controllers;
 
-import models.Result;
+
+import io.github.parisajalali96.Models.Result;
 
 public class SettingsMenuController {
 

@@ -1,4 +1,4 @@
-package models;
+package io.github.parisajalali96.Models;
 
 import models.Enums.Hero;
 import models.Enums.Weapon;
