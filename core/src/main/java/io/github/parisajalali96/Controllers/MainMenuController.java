@@ -15,10 +15,9 @@ public class MainMenuController {
     }
 
     public void handleMainMenuButton() {
-        Main main = new Main();
         if(view != null) {
             if(view.getPlayButton().isChecked() && view.getPlayButton().getText().equals("Play")) {
-               // main.getScreen().dispose();
+                Main.getMain().getScreen().dispose();
             }
         }
     }

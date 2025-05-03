@@ -25,6 +25,7 @@ public class MainMenu implements Screen {
         this.gameTitle = new Label("this is a title", skin);
         this.textField = new TextField("this is a text field", skin);
         this.table = new Table(skin);
+        controller.setView(this);
     }
 
 
@@ -35,14 +36,15 @@ public class MainMenu implements Screen {
 
         table.setFillParent(true);
         table.center();
-        table.row();
+        table.row().pad(10,0,0,10);
         table.add(gameTitle);
-        table.row();
+        table.row().pad(10,0,0,10);
         table.add(textField);
-        table.row();
+        table.row().pad(10,0,0,10);
         table.add(playButton);
-        table.row();
+        table.row().pad(10,0,0,10);
         stage.addActor(table);
+        controller.handleMainMenuButton();
     }
 
     @Override

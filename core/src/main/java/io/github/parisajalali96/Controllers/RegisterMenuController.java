@@ -1,12 +1,18 @@
 package io.github.parisajalali96.Controllers;
 
 import io.github.parisajalali96.Models.*;
+import io.github.parisajalali96.Views.RegisterMenu;
 
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
 public class RegisterMenuController {
+    private RegisterMenu view;
+
+    public void setView(RegisterMenu view) {
+        this.view = view;
+    }
 
     //register user
     public Result registerUser(String username, String password) throws IOException {

@@ -8,14 +8,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.parisajalali96.Controllers.MainMenuController;
+import io.github.parisajalali96.Controllers.RegisterMenuController;
 import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Views.MainMenu;
+import io.github.parisajalali96.Views.RegisterMenu;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
     private static Main main;
     private static SpriteBatch batch;
-    private static GameAssetManager gameAssetManager;
+
+    public static Main getMain() {
+        return main;
+    }
 
     public static void setBatch(SpriteBatch batch) {
         Main.batch = batch;
@@ -30,7 +35,7 @@ public class Main extends Game {
     public void create() {
         main = this;
         batch = new SpriteBatch();
-        main.setScreen(new MainMenu(new MainMenuController(), gameAssetManager.getSkin()));
+        main.setScreen(new RegisterMenu(new RegisterMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
     }
 
     @Override
