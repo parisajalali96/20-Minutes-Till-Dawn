@@ -14,7 +14,7 @@ public class Game {
 
     private static GameTime time = GameTime.TWENTY;
     private static Player currentPlayer;
-    private static ArrayList<Player> players;
+    private static ArrayList<Player> players = new ArrayList<>();
     private static Menu currentMenu;
 
     public static List<User> getRegisteredUsers() throws IOException {

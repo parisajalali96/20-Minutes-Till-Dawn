@@ -18,7 +18,7 @@ public class SettingsMenu implements PopupMenu {
     @Override
     public Window build(Stage stage, Skin skin) {
         Window window = new Window("Settings", skin);
-        window.setSize(400, 250);
+        window.setSize(400, 350);
         window.setModal(true);
         window.setMovable(false);
         window.setPosition(
@@ -32,6 +32,7 @@ public class SettingsMenu implements PopupMenu {
                 window.remove();
             }
         });
+        window.add(exitButton);
         return window;
     }
 }

@@ -31,6 +31,7 @@ public class RegisterMenuController {
         newUser.setSA(SA);
         UserStorage.registerUser(newUser);
         Player newPlayer = new Player(newUser);
+        Game.addPlayer(newPlayer);
         return new Result(true, "User registered successfully!");
     }
 
@@ -39,6 +40,7 @@ public class RegisterMenuController {
         User guestUser = new User("Guest Player", "96909690");
         Player guestPlayer = new Player(guestUser);
         Game.addPlayer(guestPlayer);
+        Game.setCurrentPlayer(guestPlayer);
         return new Result(true, "You're now playing as a guest!");
     }
 
