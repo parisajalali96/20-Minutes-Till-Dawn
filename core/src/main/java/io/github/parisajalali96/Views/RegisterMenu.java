@@ -1,69 +1,90 @@
 package io.github.parisajalali96.Views;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.parisajalali96.Controllers.LoginMenuController;
+import io.github.parisajalali96.Controllers.MainMenuController;
 import io.github.parisajalali96.Controllers.RegisterMenuController;
 import io.github.parisajalali96.Main;
+import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Result;
 
 import java.io.IOException;
 
 public class RegisterMenu implements Screen {
-    private Stage stage;
-    private Skin skin;
+
+    private final Stage stage;
+    private final Skin skin;
+    private final RegisterMenuController controller;
+
     private final TextField usernameField;
     private final TextField passwordField;
-    private final Label gameTitle;
+    private final SelectBox<String> questionBox;
+    private final TextField answerField;
+
     private final TextButton registerButton;
     private final TextButton guestButton;
+    private final TextButton continueToLoginButton;
 
-    private Table table;
-    private final RegisterMenuController controller;
+    private final Label gameTitle;
 
     public RegisterMenu(RegisterMenuController controller, Skin skin) {
         this.controller = controller;
         this.skin = skin;
-        this.usernameField = new TextField("Username", skin);
-        this.passwordField = new TextField("Password", skin);
-        this.gameTitle = new Label("Register", skin);
+        this.stage = new Stage(new ScreenViewport());
+
+        this.usernameField = new TextField("", skin);
+        usernameField.setMessageText("Username");
+
+        this.passwordField = new TextField("", skin);
+        passwordField.setMessageText("Password");
         passwordField.setPasswordMode(true);
         passwordField.setPasswordCharacter('*');
-        registerButton = new TextButton("Register", skin);
-        guestButton = new TextButton("Play as Guest", skin);
-        this.table = new Table();
+
+        this.questionBox = new SelectBox<>(skin);
+        questionBox.setItems(
+            "Who's your favourite 20 Minutes Till Dawn hero?",
+            "What's your favourite color?",
+            "What was the name of your first imaginary friend?",
+            "What's a nickname you're usually given?"
+        );
+
+        this.answerField = new TextField("", skin);
+        answerField.setMessageText("Your answer");
+
+        this.registerButton = new TextButton("Register", skin);
+        this.guestButton = new TextButton("Play as Guest", skin);
+        this.continueToLoginButton = new TextButton("Go to Login", skin);
+
+        this.gameTitle = new Label("Register", skin);
+
         controller.setView(this);
-
     }
-    @Override
-    public void show() {
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
-
-        table.setFillParent(true);
-        table.center();
-        table.add(gameTitle).colspan(2).padBottom(20).row();
-        table.add(usernameField).width(300).padBottom(10).colspan(2).row();
-        table.add(passwordField).width(300).padBottom(20).colspan(2).row();
-        table.add(registerButton).width(250).padBottom(10).row();
-        table.add(guestButton).width(350).row();
 
 
-        stage.addActor(table);
+    private void setupListeners() {
         registerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 String username = usernameField.getText();
                 String password = passwordField.getText();
+                String question = questionBox.getSelected();
+                String answer = answerField.getText();
 
                 try {
-                    showResult(controller.registerUser(username, password));
+                    Result result = controller.registerUser(username, password, question, answer);
+                    showResult(result);
+                    if (result.isSuccess()) {
+                        Main.getMain().setScreen(new LoginMenu(
+                            new LoginMenuController(),
+                            GameAssetManager.getGameAssetManager().getSkin()
+                        ));
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -73,57 +94,70 @@ public class RegisterMenu implements Screen {
         guestButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Handle guest login
-                showResult(controller.playAsAGuest());
+                Result result = controller.playAsAGuest();
+                showResult(result);
+                if (result.isSuccess()) {
+                    Main.getMain().setScreen(new MainMenu(new MainMenuController(),
+                        GameAssetManager.getGameAssetManager().getSkin()));
+                }
+            }
+        });
+
+        continueToLoginButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Main.getMain().setScreen(new LoginMenu(
+                    new LoginMenuController(),
+                    GameAssetManager.getGameAssetManager().getSkin()
+                ));
             }
         });
     }
 
     public void showResult(Result result) {
-        if (!result.isSuccess()) {
-            Dialog errorDialog = new Dialog("Error", skin);
-            errorDialog.text(result.getMessage());
-            errorDialog.button("OK", true);
-            errorDialog.show(stage);
-        } else {
-            Dialog successDialog = new Dialog("Success", skin);
-            successDialog.text(result.getMessage());
-            successDialog.button("OK", true);
-            successDialog.show(stage);
-        }
+        Dialog dialog = new Dialog(result.isSuccess() ? "Success" : "Error", skin);
+        dialog.text(result.getMessage()).button("OK", true).show(stage);
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+        Table table = new Table();
+        table.setFillParent(true);
+        table.center();
+        table.add(gameTitle).colspan(2).center().padBottom(20).row();
+
+        Table formTable = new Table();
+        formTable.add(usernameField).width(300).padBottom(10).row();
+        formTable.add(passwordField).width(300).padBottom(20).row();
+        formTable.add(new Label("Security Question:", skin)).left().padBottom(5).row();
+        formTable.add(questionBox).width(300).padBottom(10).row();
+        formTable.add(new Label("Answer:", skin)).left().padBottom(5).row();
+        formTable.add(answerField).width(300).padBottom(20).row();
+
+        Table buttonTable = new Table();
+        buttonTable.add(registerButton).width(250).padBottom(10).row();
+        buttonTable.add(guestButton).width(360).padBottom(10).row();
+        buttonTable.add(continueToLoginButton).width(350).padBottom(10).row();
+
+        table.add(formTable).padRight(50);
+        table.add(buttonTable).top();
+
+        stage.addActor(table);
+        setupListeners();
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
-        Main.getBatch().begin();
-        Main.getBatch().end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
+    @Override public void resize(int width, int height) {}
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() {}
+    @Override public void dispose() {}
 }
+

@@ -15,7 +15,7 @@ public class RegisterMenuController {
     }
 
     //register user
-    public Result registerUser(String username, String password) throws IOException {
+    public Result registerUser(String username, String password, String SQ, String SA) throws IOException {
         String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%&*)(_]).{8,}$";
         //errors
         for(User user : Game.getRegisteredUsers()) {
@@ -27,6 +27,8 @@ public class RegisterMenuController {
             return new Result(false, "Password format is weak!");
 
         User newUser = new User(username, password);
+        newUser.setSQ(SQ);
+        newUser.setSA(SA);
         UserStorage.registerUser(newUser);
         Player newPlayer = new Player(newUser);
         return new Result(true, "User registered successfully!");
@@ -40,26 +42,4 @@ public class RegisterMenuController {
         return new Result(true, "You're now playing as a guest!");
     }
 
-    //get the user to answer a random security question
-    public Result securityQuestion(User user){
-        String[] questions = {"Who's your favourite 20 Minuets Till Dawn hero?",
-                "What's your favourite color?",
-                "What was the name of your first imaginary friend?",
-                "What's a nickname you're usually given?"};
-
-        Random random = new Random();
-        int randomIndex = random.nextInt(questions.length);
-        String randomQuestion = questions[randomIndex];
-
-        user.setSQ(randomQuestion);
-        //TODO get user answer
-        return new Result(true, "");
-    }
-
-
-    //set security question answer
-    public Result securityAnswer(User user, String answer){
-        user.setSA(answer);
-        return new Result(true, "Security question answered successfully!");
-    }
 }

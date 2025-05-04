@@ -14,13 +14,6 @@ public class MainMenuController {
         this.view = view;
     }
 
-    public void handleMainMenuButton() {
-        if(view != null) {
-            if(view.getPlayButton().isChecked() && view.getPlayButton().getText().equals("Play")) {
-                Main.getMain().getScreen().dispose();
-            }
-        }
-    }
     //set current menu
     public Result setCurrentMenu(Menu menu){
         if(menu == Menu.SettingsMenu || menu == Menu.ProfileMenu ||

@@ -1,11 +1,18 @@
 package io.github.parisajalali96.Controllers;
 
 import io.github.parisajalali96.Models.*;
+import io.github.parisajalali96.Views.LoginMenu;
+import io.github.parisajalali96.Views.RegisterMenu;
 
 import java.io.IOException;
 
 public class LoginMenuController {
+    private LoginMenu view;
 
+
+    public void setView(LoginMenu view) {
+        this.view = view;
+    }
     //login as user
     public Result loginUser(String username, String password) throws IOException {
         User user = UserStorage.findUserByUsername(username);
@@ -19,12 +26,5 @@ public class LoginMenuController {
         return new Result(true, "Successfully logged in!");
     }
 
-    //forgot password
-    public Result forgotPassword(String username, String SA) throws IOException {
-        User user = UserStorage.findUserByUsername(username);
-        if(user == null) return new Result(false, "User not found!");
-        else if(!user.getSQ().equals(SA)) return new Result(false, "Wrong answer!");
-        else return new Result(true, "Your password is : " + user.getPassword());
-    }
 
 }

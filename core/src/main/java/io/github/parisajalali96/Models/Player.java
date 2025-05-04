@@ -1,6 +1,6 @@
 package io.github.parisajalali96.Models;
 
-import models.Enums.Hero;
+import io.github.parisajalali96.Models.Enums.Hero;
 import models.Enums.Weapon;
 
 import java.util.Random;
@@ -9,6 +9,7 @@ public class Player {
     private User user;
     private Hero hero;
     private Weapon weapon;
+    private int score;
 
     public Player(User user) {
         this.user = user;
@@ -18,6 +19,14 @@ public class Player {
     public void setRandomHero(){
         Random rand = new Random();
         hero = Hero.values()[rand.nextInt(Hero.values().length)];
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public User getUser() {
