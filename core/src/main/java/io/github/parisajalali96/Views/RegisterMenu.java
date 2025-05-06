@@ -136,9 +136,9 @@ public class RegisterMenu implements Screen {
         formTable.add(answerField).width(300).padBottom(20).row();
 
         Table buttonTable = new Table();
-        buttonTable.add(registerButton).width(250).padBottom(10).row();
-        buttonTable.add(guestButton).width(360).padBottom(10).row();
-        buttonTable.add(continueToLoginButton).width(350).padBottom(10).row();
+        buttonTable.add(registerButton).padBottom(10).row();
+        buttonTable.add(guestButton).padBottom(10).row();
+        buttonTable.add(continueToLoginButton).padBottom(10).row();
 
         table.add(formTable).padRight(50);
         table.add(buttonTable).top();

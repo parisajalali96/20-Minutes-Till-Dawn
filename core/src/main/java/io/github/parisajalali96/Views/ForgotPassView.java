@@ -40,7 +40,7 @@ public class ForgotPassView implements Screen {
         usernameField = new TextField("", skin);
         usernameField.setMessageText("Username");
         confirmAnswer = new TextButton("Confirm", skin);
-        backButton = new TextButton("Back to Login", skin);
+        backButton = new TextButton("Back", skin);
         this.table = new Table();
         controller.setView(this);
     }
@@ -60,9 +60,8 @@ public class ForgotPassView implements Screen {
         table1.add(securityQuestionAnswer).width(300).padBottom(10).colspan(2).row();
 
         Table table2 = new Table();
-        table2.add(confirmAnswer).width(300).padBottom(20).row();
-        table2.add(backButton).width(300).padBottom(10).colspan(2).row();
-
+        table2.add(confirmAnswer).padBottom(20).row();
+        table2.add(backButton).padBottom(10).colspan(2).row();
         table.add(table1).padRight(50);
         table.add(table2).top();
         stage.addActor(table);

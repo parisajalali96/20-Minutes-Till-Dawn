@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.parisajalali96.Controllers.ForgotPassController;
 import io.github.parisajalali96.Controllers.LoginMenuController;
 import io.github.parisajalali96.Controllers.MainMenuController;
+import io.github.parisajalali96.Controllers.RegisterMenuController;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Result;
@@ -28,6 +29,7 @@ public class LoginMenu implements Screen {
     private final TextButton loginButton;
     private final TextButton forgotPasswordButton;
     private final Label gameTitle;
+    private final TextButton backButton;
     private Table table;
     private final LoginMenuController controller;
 
@@ -42,6 +44,7 @@ public class LoginMenu implements Screen {
         passwordField.setPasswordCharacter('*');
         this.gameTitle = new Label("Login", skin);
         this.loginButton = new TextButton("Login", skin);
+        this.backButton = new TextButton("Back", skin);
         forgotPasswordButton = new TextButton("Forgot Password?", skin);
         this.table = new Table();
         controller.setView(this);
@@ -58,8 +61,14 @@ public class LoginMenu implements Screen {
         table.add(gameTitle).colspan(2).padBottom(20).row();
         table.add(usernameField).width(300).padBottom(10).colspan(2).row();
         table.add(passwordField).width(300).padBottom(20).colspan(2).row();
-        table.add(loginButton).width(200).padBottom(10).row();
-        table.add(forgotPasswordButton).width(450);
+
+        Table buttonRow = new Table();
+        buttonRow.add(loginButton).padRight(10);
+        buttonRow.add(backButton);
+        table.add(buttonRow).colspan(2).padBottom(15).row();
+
+        table.add(forgotPasswordButton).colspan(2).center();
+
         stage.addActor(table);
 
         loginButton.addListener(new ChangeListener() {
@@ -85,6 +94,15 @@ public class LoginMenu implements Screen {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 Main.getMain().setScreen(new ForgotPassView(new ForgotPassController(),
+                    GameAssetManager.getGameAssetManager().getSkin()));
+            }
+        });
+
+        backButton.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Main.getMain().setScreen(new RegisterMenu(new RegisterMenuController(),
                     GameAssetManager.getGameAssetManager().getSkin()));
             }
         });

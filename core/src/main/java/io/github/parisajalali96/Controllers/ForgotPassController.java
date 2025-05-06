@@ -18,7 +18,7 @@ public class ForgotPassController {
     public Result forgotPassword(String username, String SA) throws IOException {
         User user = UserStorage.findUserByUsername(username);
         if(user == null) return new Result(false, "User not found!");
-        else if(!user.getSQ().equals(SA)) return new Result(false, "Wrong answer!");
+        else if(!user.getSA().equals(SA)) return new Result(false, "Wrong answer!");
         else return new Result(true, "Your password is : " + user.getPassword());
     }
 
