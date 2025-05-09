@@ -9,13 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import io.github.parisajalali96.Models.Player;
 
-public class ScoreBoardMenu implements PopupMenu{
+public class ScoreBoardMenu {
     private final Player player;
     public ScoreBoardMenu(Player player) {
         this.player = player;
     }
 
-    @Override
     public Window build(Stage stage, Skin skin) {
         Window window = new Window("ScoreBoard", skin);
         window.setSize(400, 350);

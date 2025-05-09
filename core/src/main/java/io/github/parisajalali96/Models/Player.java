@@ -1,12 +1,12 @@
 package io.github.parisajalali96.Models;
 
 import io.github.parisajalali96.Models.Enums.Hero;
-import models.Enums.Weapon;
+import io.github.parisajalali96.Models.Enums.Weapon;
 
 import java.util.Random;
 
 public class Player {
-    private User user;
+    private final User user;
     private Hero hero;
     private Weapon weapon;
     private int score;

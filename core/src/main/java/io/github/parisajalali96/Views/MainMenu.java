@@ -12,8 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import io.github.parisajalali96.Controllers.LoginMenuController;
-import io.github.parisajalali96.Controllers.MainMenuController;
+import io.github.parisajalali96.Controllers.*;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
@@ -22,8 +21,7 @@ import sun.tools.jconsole.Tab;
 
 public class MainMenu implements Screen {
     private Stage stage;
-    private Skin skin;
-    private Player currentPlayer;
+    private final Skin skin;
     private final SelectBox<String> menuSelector;
     private final Image avatar;
     private final Label username;
@@ -35,7 +33,7 @@ public class MainMenu implements Screen {
     public MainMenu(MainMenuController controller, Skin skin) {
         this.controller = controller;
         this.skin = skin;
-        this.currentPlayer = Game.getCurrentPlayer();
+        Player currentPlayer = Game.getCurrentPlayer();
         menuSelector = new SelectBox<>(skin);
         menuSelector.setItems(
             "* menus *",
@@ -82,32 +80,30 @@ public class MainMenu implements Screen {
         menuSelector.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Window popup = null;
                 switch (menuSelector.getSelected()) {
                     case "Profile": {
-                        popup = new ProfileMenu(Game.getCurrentPlayer()).build(stage, skin);
+                        Main.getMain().setScreen(new ProfileMenu(new ProfileMenuController(),
+                            GameAssetManager.getGameAssetManager().getSkin()));
                         break;
                     }
                     case "Settings": {
-                        popup = new SettingsMenu(Game.getCurrentPlayer()).build(stage, skin);
+                        Main.getMain().setScreen(new SettingsMenu(new SettingsMenuController(),
+                            GameAssetManager.getGameAssetManager().getSkin()));
                         break;
                     }
                     case "Pre-Game": {
-                        popup = new PreGameMenu(Game.getCurrentPlayer()).build(stage, skin);
+                        Main.getMain().setScreen(new PreGameMenu(new PreGameMenuController(),
+                            GameAssetManager.getGameAssetManager().getSkin()));
                         break;
                     }
                     case "ScoreBoard": {
-                        popup = new ScoreBoardMenu(Game.getCurrentPlayer()).build(stage, skin);
+                        //popup = new ScoreBoardMenu(Game.getCurrentPlayer()).build(stage, skin);
                         break;
                     }
                     case "Hint": {
-                        popup = new HintMenu(Game.getCurrentPlayer()).build(stage, skin);
+                        //popup = new HintMenu(Game.getCurrentPlayer()).build(stage, skin);
                         break;
                     }
-                }
-
-                if (popup != null) {
-                    stage.addActor(popup);
                 }
 
                 menuSelector.setSelected("Select Menu");

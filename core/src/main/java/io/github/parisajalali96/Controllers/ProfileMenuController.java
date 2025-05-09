@@ -5,10 +5,16 @@ import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.Player;
 import io.github.parisajalali96.Models.Result;
 import io.github.parisajalali96.Models.UserStorage;
+import io.github.parisajalali96.Views.ProfileMenu;
 
 import java.io.IOException;
 
 public class ProfileMenuController {
+    private ProfileMenu view;
+
+    public void setView(ProfileMenu view) {
+        this.view = view;
+    }
 
     //change username
     public Result changeUsername(String username) throws IOException {
