@@ -24,9 +24,9 @@ com.badlogic.gdx.graphics.Color: {
 		a: 1
 	}
 	field: {
-		r: 0.5058824
-		g: 0.9372549
-		b: 0.9137255
+		r: 0.5058824,
+		g: 0.9372549,
+		b: 0.9137255,
 		a: 1
 	}
 	highlight: {
@@ -147,6 +147,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: title
 		fontColor: white
 	}
+  header: {
+    font: subtitle
+    fontColor: white
+  }
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {

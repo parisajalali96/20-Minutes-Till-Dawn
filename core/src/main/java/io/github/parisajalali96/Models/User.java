@@ -5,11 +5,30 @@ public class User {
     private String password;
     private String SQ;
     private String SA;
+    private int totalScore;
+    private int longestSurvivalScore;
+    private int numOfKills;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
+
+
+    public int getNumOfKills() {
+        return numOfKills;
+    }
+    public void addNumOfKills(int numOfKills) {
+        this.numOfKills += numOfKills;
+    }
+    public int getLongestSurvivalScore() {
+        return longestSurvivalScore;
+    }
+
+    public void setLongestSurvivalScore(int longestSurvivalScore) {
+        this.longestSurvivalScore = longestSurvivalScore;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -33,6 +52,12 @@ public class User {
     }
     public void setSQ(String SQ) {
         this.SQ = SQ;
+    }
+    public void addTotalScore(int score) {
+        totalScore += score;
+    }
+    public int getTotalScore() {
+        return totalScore;
     }
 
 }

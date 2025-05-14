@@ -19,9 +19,9 @@ public class LoginMenuController {
         if(user == null) return new Result(false, "User not found!");
         else if(!user.getPassword().equals(password)) return new Result(false, "Wrong password!");
         Player currentPlayer = null;
-        for(Player p : Game.getPlayers()){
-            if(p.getUser().getUsername().equals(user.getUsername())) currentPlayer = p;
-        }
+        User currentUser = UserStorage.findUserByUsername(username);
+        currentPlayer = new Player(currentUser);
+        Game.addPlayer(currentPlayer);
         Game.setCurrentPlayer(currentPlayer);
         return new Result(true, "Successfully logged in!");
     }

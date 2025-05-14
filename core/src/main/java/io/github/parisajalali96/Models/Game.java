@@ -14,7 +14,7 @@ public class Game {
 
     private static GameTime time = GameTime.TWENTY;
     private static Player currentPlayer;
-    private static ArrayList<Player> players = new ArrayList<>();
+    private static final ArrayList<Player> players = new ArrayList<>();
     private static Menu currentMenu;
 
     public static List<User> getRegisteredUsers() throws IOException {
@@ -46,5 +46,8 @@ public class Game {
     }
     public static void setTime(GameTime time) {
         Game.time = time;
+    }
+    public static void addScore(int score) {
+        Game.getCurrentPlayer().getUser().addTotalScore(score);
     }
 }

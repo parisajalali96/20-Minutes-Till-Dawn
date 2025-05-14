@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.parisajalali96.Controllers.MainMenuController;
 import io.github.parisajalali96.Controllers.RegisterMenuController;
 import io.github.parisajalali96.Models.GameAssetManager;
+import io.github.parisajalali96.Models.Player;
 import io.github.parisajalali96.Views.MainMenu;
 import io.github.parisajalali96.Views.RegisterMenu;
 
@@ -29,7 +30,6 @@ public class Main extends Game {
     public static SpriteBatch getBatch() {
         return batch;
     }
-
 
     @Override
     public void create() {

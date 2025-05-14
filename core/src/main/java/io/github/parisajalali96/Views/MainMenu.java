@@ -19,6 +19,8 @@ import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Player;
 import sun.tools.jconsole.Tab;
 
+import java.io.IOException;
+
 public class MainMenu implements Screen {
     private Stage stage;
     private final Skin skin;
@@ -70,11 +72,14 @@ public class MainMenu implements Screen {
 
         mainTable.add(infoTable).left().pad(20).row();
 
-        Table avatarTable = new Table();
-        avatarTable.add(avatar).size(300, 300).padTop(20).padRight(30).right(); // Larger size and positioned on the right
-        mainTable.add(avatarTable).padRight(20);
-        mainTable.add(menuSelector).padRight(20);
-        mainTable.add(logoutButton).padRight(20);
+        mainTable.add(avatar).size(300, 300).padTop(10).row();
+
+        Table rightSide = new Table();
+        rightSide.add(menuSelector).padBottom(10).row();
+        rightSide.add(logoutButton).row();
+
+        mainTable.add(rightSide).top().left().padTop(10).row();
+
         stage.addActor(mainTable);
 
         menuSelector.addListener(new ChangeListener() {
@@ -97,11 +102,17 @@ public class MainMenu implements Screen {
                         break;
                     }
                     case "ScoreBoard": {
-                        //popup = new ScoreBoardMenu(Game.getCurrentPlayer()).build(stage, skin);
+                        try {
+                            Main.getMain().setScreen(new ScoreBoardMenu(new ScoreBoardController(),
+                                GameAssetManager.getGameAssetManager().getSkin()));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         break;
                     }
                     case "Hint": {
-                        //popup = new HintMenu(Game.getCurrentPlayer()).build(stage, skin);
+                        Main.getMain().setScreen(new HintMenu(new HintMenuController(),
+                            GameAssetManager.getGameAssetManager().getSkin()));
                         break;
                     }
                 }

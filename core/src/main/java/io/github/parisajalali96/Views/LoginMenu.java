@@ -15,7 +15,9 @@ import io.github.parisajalali96.Controllers.LoginMenuController;
 import io.github.parisajalali96.Controllers.MainMenuController;
 import io.github.parisajalali96.Controllers.RegisterMenuController;
 import io.github.parisajalali96.Main;
+import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
+import io.github.parisajalali96.Models.Player;
 import io.github.parisajalali96.Models.Result;
 
 import java.io.IOException;
