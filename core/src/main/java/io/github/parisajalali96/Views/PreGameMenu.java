@@ -8,15 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.sun.tools.javac.util.List;
 import io.github.parisajalali96.Controllers.MainMenuController;
 import io.github.parisajalali96.Controllers.PreGameMenuController;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Enums.Hero;
-import io.github.parisajalali96.Models.Enums.Weapon;
+import io.github.parisajalali96.Models.Enums.WeaponType;
 import io.github.parisajalali96.Models.GameAssetManager;
 
 public class PreGameMenu implements Screen{
@@ -35,7 +33,7 @@ public class PreGameMenu implements Screen{
 
 
     private Hero selectedHero;
-    private Weapon selectedWeapon;
+    private WeaponType selectedWeapon;
     private String selectedDuration = "20 minutes";
 
     public PreGameMenu(PreGameMenuController controller, Skin skin) {
@@ -74,7 +72,7 @@ public class PreGameMenu implements Screen{
     private ScrollPane createWeaponSelection() {
         HorizontalGroup weaponGroup = new HorizontalGroup();
 
-        for (Weapon weapon : Weapon.values()) {
+        for (WeaponType weapon : WeaponType.values()) {
             TextButton weaponButton = new TextButton(weapon.getName(), skin);
             weaponButton.addListener(new ChangeListener() {
                 @Override
@@ -99,6 +97,16 @@ public class PreGameMenu implements Screen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 selectedDuration = gameTimeSelectBox.getSelected();
+            }
+        });
+    }
+
+    public void startGame() {
+        startGameButton.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Main.getMain().setScreen(new GameView());
             }
         });
     }
@@ -129,6 +137,7 @@ public class PreGameMenu implements Screen{
             }
         });
 
+        startGame();
         table.add(startGameButton).colspan(2).pad(10);
 
         backButton.addListener(new ChangeListener() {

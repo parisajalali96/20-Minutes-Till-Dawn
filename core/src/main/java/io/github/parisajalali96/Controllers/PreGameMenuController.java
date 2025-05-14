@@ -1,9 +1,10 @@
 package io.github.parisajalali96.Controllers;
 
 import io.github.parisajalali96.Models.Enums.Hero;
-import io.github.parisajalali96.Models.Enums.Weapon;
+import io.github.parisajalali96.Models.Enums.WeaponType;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.Result;
+import io.github.parisajalali96.Models.Weapon;
 import models.Enums.GameTime;
 
 public class PreGameMenuController {
@@ -15,8 +16,8 @@ public class PreGameMenuController {
     }
 
     //choose weapon
-    public Result chooseWeapon(Weapon weapon) {
-        Game.getCurrentPlayer().setWeapon(weapon);
+    public Result chooseWeapon(WeaponType weapon) {
+        Game.getCurrentPlayer().setWeapon(new Weapon(weapon));
         return new Result(true, "Weapon set successfully!");
     }
 
@@ -27,7 +28,7 @@ public class PreGameMenuController {
     }
 
     //start game
-    public Result startGame(String gameDuration, Hero hero, Weapon weapon) {
+    public Result startGame(String gameDuration, Hero hero, WeaponType weapon) {
         //TODO implement
         return new Result(true, "Game starting successfully!");
     }
