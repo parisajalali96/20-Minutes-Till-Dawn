@@ -5,47 +5,43 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class Weapon {
     private WeaponType type;
-    private Vector2 position;
-    private Vector2 velocity;
-    private float speed;
     private Texture texture;
-    private boolean active;
+    private final List<Projectile> projectiles = new ArrayList<>();
 
     public Weapon(WeaponType type) {
         this.type = type;
         this.texture = type.getTexture();
     }
 
-    public void setProjectile(Vector2 startPosition, Vector2 direction){
-        this.position = new Vector2(400, 240);
-        this.speed = 500f;
-        this.velocity = direction.nor().scl(speed);
-        this.active = true;
+    public void shoot(Vector2 startPosition, Vector2 direction) {
+        projectiles.add(new Projectile(startPosition, direction, texture));
     }
 
     public void update(float delta) {
-        if (!active) return;
-
-        position.mulAdd(velocity, delta);
-
-        if (position.x < 0 || position.x > 800 || position.y < 0 || position.y > 600) {
-            active = false;
+        Iterator<Projectile> iter = projectiles.iterator();
+        while (iter.hasNext()) {
+            Projectile p = iter.next();
+            p.update(delta);
+            if (!p.isActive()) {
+                iter.remove();
+            }
         }
-
     }
+
     public void draw(SpriteBatch batch) {
-        if (active) {
-            batch.draw(texture, position.x, position.y);
+        for (Projectile p : projectiles) {
+            p.draw(batch);
         }
-    }
-
-    public boolean isActive() {
-        return active;
     }
 
     public void dispose() {
         texture.dispose();
     }
 }
+
