@@ -22,7 +22,7 @@ public class Weapon {
     }
 
     public void shoot(Vector2 startPosition, Vector2 direction) {
-        projectiles.add(new Projectile(startPosition, direction, bulletTexture));
+        projectiles.add(new Projectile(type.getDamage(), startPosition, direction, bulletTexture));
     }
 
     public void update(float delta) {
@@ -57,7 +57,9 @@ public class Weapon {
         }
     }
 
-
+    public List<Projectile> getProjectiles() {
+        return projectiles;
+    }
 
     public void dispose() {
         texture.dispose();

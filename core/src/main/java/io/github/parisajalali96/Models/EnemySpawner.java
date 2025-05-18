@@ -18,7 +18,7 @@ public class EnemySpawner {
             frames.add(new TextureRegion(texture));
         }
         TextureRegion[] framesArray = frames.toArray(new TextureRegion[0]);
-        return new Animation<>(0.15f, framesArray);
+        return new Animation<>(0.25f, framesArray);
     }
 
 
@@ -29,7 +29,7 @@ public class EnemySpawner {
             frames.add(new TextureRegion(texture));
         }
         TextureRegion[] framesArray = frames.toArray(new TextureRegion[0]);
-        return new Animation<>(0.15f, framesArray);
+        return new Animation<>(0.25f, framesArray);
     }
 
     public static Animation<TextureRegion> loadAttackAnimation(EnemyType type) {
@@ -39,6 +39,6 @@ public class EnemySpawner {
             frames.add(new TextureRegion(texture));
         }
         TextureRegion[] framesArray = frames.toArray(new TextureRegion[0]);
-        return new Animation<>(0.15f, framesArray);
+        return new Animation<>(0.25f, framesArray);
     }
 }

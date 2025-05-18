@@ -15,7 +15,9 @@ import io.github.parisajalali96.Controllers.PreGameMenuController;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Enums.Hero;
 import io.github.parisajalali96.Models.Enums.WeaponType;
+import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
+import models.Enums.GameTime;
 
 public class PreGameMenu implements Screen{
     private Stage stage;
@@ -97,6 +99,10 @@ public class PreGameMenu implements Screen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 selectedDuration = gameTimeSelectBox.getSelected();
+                if(selectedDuration.equals("2 minutes")) Game.setTime(GameTime.TWO);
+                else if(selectedDuration.equals("5 minutes")) Game.setTime(GameTime.FIVE);
+                else if(selectedDuration.equals("10 minutes")) Game.setTime(GameTime.TEN);
+                else if(selectedDuration.equals("20 minutes")) Game.setTime(GameTime.TWENTY);
             }
         });
     }
