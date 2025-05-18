@@ -6,13 +6,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import io.github.parisajalali96.Models.Enums.EnemyType;
 import io.github.parisajalali96.Models.Game;
+import io.github.parisajalali96.Models.GameMap;
 import io.github.parisajalali96.Models.Weapon;
 
 public class GameView implements Screen {
     private SpriteBatch batch;
     OrthographicCamera camera;
+    private GameMap map;
 
 
     @Override
@@ -20,6 +24,10 @@ public class GameView implements Screen {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
+        map = new GameMap();
+
+        // Example: Spawn one Tree enemy at (200, 200)
+        map.spawnEnemy(EnemyType.Tree, new Vector2(200, 200));
     }
 
     @Override
@@ -30,9 +38,11 @@ public class GameView implements Screen {
         camera.update();
 
         Game.getCurrentPlayer().update(delta, this.camera);
+        map.update(delta);
 
         batch.begin();
         Game.getCurrentPlayer().draw(batch);
+        map.draw(batch);
         batch.end();
     }
 
@@ -60,5 +70,6 @@ public class GameView implements Screen {
     public void dispose() {
         batch.dispose();
         Game.getCurrentPlayer().dispose();
+
     }
 }
