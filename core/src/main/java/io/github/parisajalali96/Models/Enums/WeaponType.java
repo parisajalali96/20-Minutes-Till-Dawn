@@ -15,6 +15,7 @@ public enum WeaponType {
     private final String name;
     private final String weaponImagePath;
     private final List<String> weaponReloadStagesPath;
+    static String bulletImagePath = "Images/Texture2D/T_SmallCircle.png";
     WeaponType(String name, String weaponImagePath, List<String> weaponReloadStagesPath) {
         this.name = name;
         this.weaponImagePath = weaponImagePath;
@@ -32,6 +33,9 @@ public enum WeaponType {
             textureList.add(new Texture(Gdx.files.internal(s)));
         }
         return textureList;
+    }
+    public static Texture getBulletTexture() {
+        return new Texture(Gdx.files.internal(bulletImagePath));
     }
 
 }

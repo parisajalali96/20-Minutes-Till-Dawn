@@ -1,6 +1,7 @@
 package io.github.parisajalali96.Models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import models.Enums.GameTime;
 import models.Enums.Menu;

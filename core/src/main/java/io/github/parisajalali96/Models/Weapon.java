@@ -12,15 +12,17 @@ import java.util.List;
 public class Weapon {
     private WeaponType type;
     private Texture texture;
+    private Texture bulletTexture;
     private final List<Projectile> projectiles = new ArrayList<>();
 
     public Weapon(WeaponType type) {
         this.type = type;
         this.texture = type.getTexture();
+        this.bulletTexture = WeaponType.getBulletTexture();
     }
 
     public void shoot(Vector2 startPosition, Vector2 direction) {
-        projectiles.add(new Projectile(startPosition, direction, texture));
+        projectiles.add(new Projectile(startPosition, direction, bulletTexture));
     }
 
     public void update(float delta) {
@@ -34,14 +36,32 @@ public class Weapon {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, Vector2 playerPosition, boolean facingRight) {
+        float weaponX;
+        float weaponY = playerPosition.y + 5;
+
+        if (facingRight) {
+            weaponX = playerPosition.x + 12;
+            batch.draw(texture, weaponX, weaponY,
+                texture.getWidth(), texture.getHeight());
+        } else {
+            weaponX = playerPosition.x ;
+
+            batch.draw(texture,
+                weaponX + texture.getWidth(), weaponY,
+                -texture.getWidth(), texture.getHeight());
+        }
+
         for (Projectile p : projectiles) {
             p.draw(batch);
         }
     }
 
+
+
     public void dispose() {
         texture.dispose();
+        bulletTexture.dispose();
     }
 }
 

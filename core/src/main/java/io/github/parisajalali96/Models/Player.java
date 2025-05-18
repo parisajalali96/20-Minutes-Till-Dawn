@@ -2,6 +2,7 @@ package io.github.parisajalali96.Models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,6 +29,12 @@ public class Player {
     private float shootTimer = 0f;
     private float speed = 200f;
     private boolean facingRight = true;
+
+    //weapon stuff
+    private boolean isShooting = false;
+    private float shootingDisplayTime = 0.1f;
+    private float shootingTimer = 0f;
+
 
     // Animation fields
     private Animation<TextureRegion> walkAnimation;
@@ -93,7 +100,7 @@ public class Player {
         this.weapon = weapon;
     }
 
-    public void update(float delta) {
+    public void update(float delta, OrthographicCamera camera) {
         float moveX = 0f;
         float moveY = 0f;
 
@@ -133,9 +140,14 @@ public class Player {
         if (Gdx.input.isButtonPressed(KeyControl.shootWeapon) && shootTimer <= 0f) {
             shootTimer = shootCooldown;
             Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-            Vector2 direction = new Vector2(mousePos.x - position.x, mousePos.y - position.y);
-            weapon.shoot(position.cpy(), direction);
+            camera.unproject(mousePos);
+            Vector2 playerCenter = new Vector2(position.x + 32, position.y);
+            Vector2 direction = new Vector2(mousePos.x, mousePos.y).sub(playerCenter).nor();
+            weapon.shoot(playerCenter, direction);
+            isShooting = true;
+            shootingTimer = shootingDisplayTime;
         }
+        weapon.update(delta);
     }
 
     public void draw(SpriteBatch batch) {
@@ -148,8 +160,8 @@ public class Player {
         }
 
         batch.draw(currentFrame, position.x, position.y);
-        weapon.draw(batch);
-        weapon.draw(batch);
+
+        weapon.draw(batch, position, facingRight);
     }
 
 
@@ -165,6 +177,9 @@ public class Player {
     }
     public void setPassword(String password) {
         this.user.setPassword(password);
+    }
+    public Vector2 getPosition() {
+        return position;
     }
 }
 
