@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import io.github.parisajalali96.Models.Enums.EnemyType;
 import io.github.parisajalali96.Models.Enums.TileTexture;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,7 +68,7 @@ public class GameMap {
 
         spawnTimer += delta;
         if (spawnTimer >= 1f) {
-            spawnTimer = 0f;
+            spawnTimer -= 1f;
             for (EnemyType type : EnemyType.values()) {
                 int countToSpawn = type.getSpawnCount((int) Game.getSecondsPassed());
                 for (int i = 0; i < countToSpawn; i++) {
@@ -73,9 +77,10 @@ public class GameMap {
                         int tileY = (int)(Math.random() * tiles[0].length);
                         if(!tiles[tileX][tileY].isOccupied())
                             spawnEnemyOnTile(EnemyType.TentacleMonster, tileX, tileY);
+                    } else {
+                        Vector2 spawnPos = getRandomSpawnPosition();
+                        spawnEnemy(type, spawnPos);
                     }
-                    Vector2 spawnPos = getRandomSpawnPosition();
-                    spawnEnemy(type, spawnPos);
                 }
             }
         }
@@ -88,7 +93,8 @@ public class GameMap {
         Weapon weapon = player.getWeapon();
         weapon.update(delta);
 
-        // Bullet-enemy collision
+
+        // killing enemies
         Iterator<Projectile> bulletIter = weapon.getProjectiles().iterator();
         while (bulletIter.hasNext()) {
             Projectile bullet = bulletIter.next();
@@ -117,19 +123,21 @@ public class GameMap {
             for (int y = 0; y < tiles[x].length; y++) {
                 Tile tile = tiles[x][y];
                 if (tile != null) {
-                    Vector2 tilePos = tile.getPosition(); // tile's pixel position
-                    if (tilePos.dst(playerPos) <= visibilityRadius) {
-                        tile.render(batch);
-                    }
+                    tile.render(batch);
+//                    Vector2 tilePos = tile.getPosition(); // tile's pixel position
+//                    if (tilePos.dst(playerPos) <= visibilityRadius) {
+//                        tile.render(batch);
+//                    }
                 }
             }
         }
 
         // Draw enemies on top
         for (Enemy enemy : enemies) {
-            if (enemy.getPosition().dst(playerPos) <= visibilityRadius) {
-                enemy.draw(batch);
-            }
+            enemy.draw(batch);
+//            if (enemy.getPosition().dst(playerPos) <= visibilityRadius) {
+//                enemy.draw(batch);
+//            }
         }
     }
 

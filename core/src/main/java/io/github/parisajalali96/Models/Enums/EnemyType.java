@@ -20,9 +20,10 @@ public enum EnemyType {
     Eyebat("Eyebat", List.of(), List.of(),List.of("Images/Sprite/T_EyeBat_0.png", "Images/Sprite/T_EyeBat_1.png", "Images/Sprite/T_EyeBat_2.png", "Images/Sprite/T_EyeBat_3.png"), 3, 50) {
         @Override
         public int getSpawnCount(float secondsPassed) {
-            if (secondsPassed < Game.getTime().getTotalSeconds() / 4f) return 0;
-            return Math.max(0, (int)((4 * secondsPassed -  Game.getTime().getTotalSeconds() + 30) / 30));
+            float time = (int)(secondsPassed / 10f) * 10f;
+            return Math.max(0, (int)((time - Game.getTime().getTotalSeconds() + 30) / 100));
         }
+
     },
     Elder("Elder", List.of(), List.of(), List.of("Images/Sprite/ElderBrain.png"), 5, 400)
         {
@@ -30,13 +31,20 @@ public enum EnemyType {
 
             @Override
             public int getSpawnCount(float secondsPassed) {
-                if (!hasSpawned && secondsPassed >= Game.getTime().getTotalSeconds() / 2f) {
+                //fix game time
+                if (!hasSpawned && secondsPassed >= 60f) {
                     hasSpawned = true;
                     return 1;
                 }
                 return 0;
             }
-        };
+        },
+    BrainMonster("Brain Monster", List.of(), List.of(), List.of("Images/Sprite/BrainMonster_0.png", "Images/Sprite/BrainMonster_1.png", "Images/Sprite/BrainMonster_2.png", "Images/Sprite/BrainMonster_3.png"), 1, 25) {
+        @Override
+        public int getSpawnCount(float secondsPassed) {
+            return (int) (secondsPassed / 3) / 30;
+        }
+    };
 
 
     private final String name;

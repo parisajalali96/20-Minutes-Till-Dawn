@@ -34,12 +34,12 @@ public class Enemy {
 
     public void update(float delta) {
         stateTime += delta;
-        if(type == EnemyType.Eyebat || type == EnemyType.Elder) followPlayer(Game.getCurrentPlayer().getPosition(), delta);
+        if(type == EnemyType.Eyebat || type == EnemyType.Elder || type == EnemyType.BrainMonster) followPlayer(Game.getCurrentPlayer().getPosition(), delta);
     }
 
     public void draw(SpriteBatch batch) {
         TextureRegion currentFrame;
-        if(type != EnemyType.Eyebat && type != EnemyType.Elder) {
+        if(type != EnemyType.Eyebat && type != EnemyType.Elder && type != EnemyType.BrainMonster) {
             if(type == EnemyType.TentacleMonster ) {
                 if (!isSpawned) {
                     currentFrame = spawnAnimation.getKeyFrame(stateTime);
@@ -94,8 +94,23 @@ public class Enemy {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(position.x, position.y, 10, 10);
+        TextureRegion currentFrame;
+
+        if (type != EnemyType.Eyebat && type != EnemyType.Elder && type != EnemyType.BrainMonster) {
+            if (type == EnemyType.TentacleMonster && !isSpawned) {
+                currentFrame = spawnAnimation.getKeyFrame(stateTime);
+            } else {
+                currentFrame = idleAnimation.getKeyFrame(stateTime, true);
+            }
+        } else {
+            currentFrame = attackAnimation.getKeyFrame(stateTime, true);
+        }
+
+        return new Rectangle(position.x, position.y,
+            currentFrame.getRegionWidth(),
+            currentFrame.getRegionHeight());
     }
+
 
 
 

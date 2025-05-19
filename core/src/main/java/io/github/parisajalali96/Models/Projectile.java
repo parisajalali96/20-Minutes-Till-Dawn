@@ -1,5 +1,6 @@
 package io.github.parisajalali96.Models;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -24,7 +25,7 @@ public class Projectile {
         if (!active) return;
         position.mulAdd(velocity, delta);
 
-        if (position.x < 0 || position.x > 800 || position.y < 0 || position.y > 600) {
+        if (position.x < 0 || position.x > Gdx.graphics.getWidth() || position.y < 0 || position.y > Gdx.graphics.getHeight()) {
             active = false;
         }
     }
@@ -40,7 +41,7 @@ public class Projectile {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(position.x, position.y, 10, 10);
+        return new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
     }
 
     public int getDamage() {
