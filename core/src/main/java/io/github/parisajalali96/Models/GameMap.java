@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import io.github.parisajalali96.Models.Enums.EnemyType;
 import io.github.parisajalali96.Models.Enums.TileTexture;
+import org.w3c.dom.Text;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class GameMap {
 
     private Tile[][] tiles = new Tile[MAP_WIDTH][MAP_HEIGHT];
     private List<Enemy> enemies = new ArrayList<>();
+    private List<XpDrop> drops = new ArrayList<>();
+    private List<Projectile> enemyProjectiles = new ArrayList<>();
 
     private float spawnTimer = 0f;
     private boolean treesSpawned = false;
@@ -49,8 +52,9 @@ public class GameMap {
         Animation<TextureRegion> idleAnimation = EnemySpawner.loadIdleAnimation(type);
         Animation<TextureRegion> spawnAnimation = EnemySpawner.loadSpawnAnimation(type);
         Animation<TextureRegion> attackAnimation = EnemySpawner.loadAttackAnimation(type);
+        Animation<TextureRegion> deathAnimation = EnemySpawner.loadDeathAnimation();
 
-        enemies.add(new Enemy(type, position, idleAnimation, spawnAnimation, attackAnimation));
+        enemies.add(new Enemy(type, position, idleAnimation, spawnAnimation, attackAnimation, deathAnimation));
     }
 
     public void update(float delta) {
@@ -58,9 +62,9 @@ public class GameMap {
 
         if (!treesSpawned) {
             for (int i = 0; i < 50; i++) {
-                int tileX = (int)(Math.random() * tiles.length);
-                int tileY = (int)(Math.random() * tiles[0].length);
-                if(!tiles[tileX][tileY].isOccupied())
+                int tileX = (int) (Math.random() * tiles.length);
+                int tileY = (int) (Math.random() * tiles[0].length);
+                if (!tiles[tileX][tileY].isOccupied())
                     spawnEnemyOnTile(EnemyType.Tree, tileX, tileY);
             }
             treesSpawned = true;
@@ -72,10 +76,10 @@ public class GameMap {
             for (EnemyType type : EnemyType.values()) {
                 int countToSpawn = type.getSpawnCount((int) Game.getSecondsPassed());
                 for (int i = 0; i < countToSpawn; i++) {
-                    if(type == EnemyType.TentacleMonster) {
-                        int tileX = (int)(Math.random() * tiles.length);
-                        int tileY = (int)(Math.random() * tiles[0].length);
-                        if(!tiles[tileX][tileY].isOccupied())
+                    if (type == EnemyType.TentacleMonster) {
+                        int tileX = (int) (Math.random() * tiles.length);
+                        int tileY = (int) (Math.random() * tiles[0].length);
+                        if (!tiles[tileX][tileY].isOccupied())
                             spawnEnemyOnTile(EnemyType.TentacleMonster, tileX, tileY);
                     } else {
                         Vector2 spawnPos = getRandomSpawnPosition();
@@ -108,12 +112,32 @@ public class GameMap {
                     bulletIter.remove();
 
                     if (!enemy.isAlive()) {
+                        Game.getCurrentPlayer().addKill();
+                        drops.add(new XpDrop(new Vector2(enemy.getPosition().x, enemy.getPosition().y)));
                         enemyIter.remove();
                     }
                     break;
                 }
             }
         }
+
+        Iterator<XpDrop> xpIter = drops.iterator();
+        while (xpIter.hasNext()) {
+            XpDrop dot = xpIter.next();
+            if (dot.isPickedUpBy(player)) {
+                dot.addXp();
+                xpIter.remove();
+            }
+        }
+
+        for (Projectile p : enemyProjectiles) {
+            p.update(delta);
+            if (p.getBounds().overlaps(Game.getCurrentPlayer().getBounds())) {
+                Game.getCurrentPlayer().addHealth(-p.getDamage());
+                // remove if you want it to be one-hit
+            }
+        }
+
     }
 
     public void draw(SpriteBatch batch) {
@@ -135,10 +159,19 @@ public class GameMap {
         // Draw enemies on top
         for (Enemy enemy : enemies) {
             enemy.draw(batch);
-//            if (enemy.getPosition().dst(playerPos) <= visibilityRadius) {
-//                enemy.draw(batch);
-//            }
         }
+
+        //draw dropped xps when enemy dies
+        for(XpDrop xpDrop : drops) {
+            xpDrop.draw(batch);
+        }
+
+        //draw enemy projectiles
+        for(Projectile p : enemyProjectiles) {
+            p.draw(batch);
+        }
+
+
     }
 
     public Vector2 getRandomSpawnPosition() {
@@ -182,6 +215,10 @@ public class GameMap {
         float x = tileX * TILE_SIZE;
         float y = tileY * TILE_SIZE;
         spawnEnemy(type, new Vector2(x, y));
+    }
+
+    public void addEnemeyProjectile(Projectile p) {
+        enemyProjectiles.add(p);
     }
 
 }

@@ -1,5 +1,6 @@
 package io.github.parisajalali96.Models;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,31 +16,89 @@ public class Enemy {
     private Animation<TextureRegion> idleAnimation;
     private Animation<TextureRegion> spawnAnimation;
     private Animation<TextureRegion> attackAnimation;
+    private Animation<TextureRegion> deathAnimation;
     private float stateTime = 0f;
     private boolean isMoving = false;
-    private float speed = 60f;
+    private final float NORMAL_SPEED = 60f;
+    private final float SPEDUP_SPEED = 120f;
+    private float speed = NORMAL_SPEED;
     private boolean firstShoot = false;
     private boolean isSpawned = false;
+    private boolean spawnedFromRight = false;
+    public boolean deathAnimationPlayed = false;
+    private float elderSpeedupTimer = 0f;
+    private boolean elderSpeedBoost = false;
+
+
+    //for eye monster shooting
+    private float shootingCoolDown = 3f;
+    private float shootingTimer = 0f;
 
     public Enemy(EnemyType type, Vector2 position, Animation<TextureRegion> idleAnimation,
-                 Animation<TextureRegion> spawnAnimation, Animation<TextureRegion> attackAnimation) {
+                 Animation<TextureRegion> spawnAnimation, Animation<TextureRegion> attackAnimation, Animation<TextureRegion> deathAnimation) {
         this.type = type;
         health = type.getHP();
         this.position = position;
         this.idleAnimation = idleAnimation;
         this.spawnAnimation = spawnAnimation;
         this.attackAnimation = attackAnimation;
+        this.deathAnimation = idleAnimation;
         isAlive = true;
+        spawnedFromRight = position.x > (float) Gdx.graphics.getWidth() / 2;
     }
 
     public void update(float delta) {
         stateTime += delta;
-        if(type == EnemyType.Eyebat || type == EnemyType.Elder || type == EnemyType.BrainMonster) followPlayer(Game.getCurrentPlayer().getPosition(), delta);
+        if (!isAlive) {
+            if (deathAnimation.isAnimationFinished(stateTime)) {
+                deathAnimationPlayed = true;
+            }
+            return;
+        }
+
+
+        if(type == EnemyType.Elder) {
+            if(!elderSpeedBoost) {
+                elderSpeedupTimer += delta;
+                if(elderSpeedupTimer >= 5f) {
+                    elderSpeedBoost = true;
+                    elderSpeedupTimer = 0f;
+                    speed = SPEDUP_SPEED;
+                }
+            } else {
+                elderSpeedupTimer += delta;
+                if(elderSpeedupTimer >= 5f) {
+                    elderSpeedBoost = false;
+                    elderSpeedupTimer = 0f;
+                    speed = NORMAL_SPEED;
+                }
+            }
+            followPlayer(Game.getCurrentPlayer().getPosition(), delta);
+        } else if(type == EnemyType.BrainMonster)
+            followPlayer(Game.getCurrentPlayer().getPosition(), delta);
+        else if(type == EnemyType.Eyebat) {
+            shootingTimer += delta;
+            if(shootingTimer >= shootingCoolDown) {
+                shootingTimer = 0f;
+                shootPlayer();
+            }
+            followPlayer(Game.getCurrentPlayer().getPosition(), delta);
+        }
+    }
+
+    //for eyebat to shoot at character
+    public void shootPlayer(){
+        Vector2 target = Game.getCurrentPlayer().getPosition();
+        Vector2 direction = new Vector2(target).sub(position).nor();
+        Projectile enemyProjectile = new Projectile(3, this.position.cpy(), direction, EnemyType.getEyeBatTexture());
+        Game.getMap().addEnemeyProjectile(enemyProjectile);
     }
 
     public void draw(SpriteBatch batch) {
         TextureRegion currentFrame;
-        if(type != EnemyType.Eyebat && type != EnemyType.Elder && type != EnemyType.BrainMonster) {
+        if(!isAlive) {
+            currentFrame = deathAnimation.getKeyFrame(stateTime, true);
+        } else if(type != EnemyType.Eyebat && type != EnemyType.Elder && type != EnemyType.BrainMonster) {
             if(type == EnemyType.TentacleMonster ) {
                 if (!isSpawned) {
                     currentFrame = spawnAnimation.getKeyFrame(stateTime);
@@ -54,7 +113,36 @@ public class Enemy {
         } else {
             currentFrame = attackAnimation.getKeyFrame(stateTime, true);
         }
-        batch.draw(currentFrame, position.x, position.y);
+
+        Vector2 playerPosition = Game.getCurrentPlayer().getPosition();
+        float x = playerPosition.x - position.x;
+        float y = playerPosition.y - position.y;
+        float angle = (float) Math.toDegrees(Math.atan2(y, x));
+
+        if (angle > 90) angle %= 90;
+        if (angle < -90) angle %= -90;
+
+        float originX = currentFrame.getRegionWidth() / 2f;
+        float originY = currentFrame.getRegionHeight() / 2f;
+
+        if(type == EnemyType.Tree || type == EnemyType.TentacleMonster) batch.draw(currentFrame, position.x, position.y);
+        else {
+            boolean flip = playerPosition.x < position.x;
+            if (flip && !currentFrame.isFlipX()) {
+                currentFrame.flip(true, false);
+            } else if (!flip && currentFrame.isFlipX()) {
+                currentFrame.flip(true, false);
+            }
+            batch.draw(
+                currentFrame,
+                position.x, position.y,
+                originX, originY,
+                currentFrame.getRegionWidth(),
+                currentFrame.getRegionHeight(),
+                1f, 1f,
+                angle
+            );
+        }
     }
 
     public Vector2 getPosition() {
@@ -105,6 +193,7 @@ public class Enemy {
         } else {
             currentFrame = attackAnimation.getKeyFrame(stateTime, true);
         }
+
 
         return new Rectangle(position.x, position.y,
             currentFrame.getRegionWidth(),

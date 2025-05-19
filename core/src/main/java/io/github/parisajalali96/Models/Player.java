@@ -24,6 +24,7 @@ public class Player {
     private int level;
     private int xp;
     private Vector2 position = new Vector2(400, 240);
+    private int kills;
 
     //animation stuff
     private float shootCooldown = 0.25f;
@@ -181,6 +182,33 @@ public class Player {
     }
     public Vector2 getPosition() {
         return position;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public void addKill() {
+        this.kills ++;
+    }
+
+    public int getXp(){
+        return xp;
+    }
+    public void addXp(int xp) {
+        this.xp += xp;
+    }
+    public void addHealth(int health) {
+        this.health += health;
+    }
+
+    public Rectangle getBounds() {
+        TextureRegion currentFrame;
+        currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+
+        return new Rectangle(position.x, position.y,
+            currentFrame.getRegionWidth(),
+            currentFrame.getRegionHeight());
     }
 
 }

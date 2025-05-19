@@ -1,11 +1,13 @@
 package io.github.parisajalali96.Models.Enums;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.github.parisajalali96.Models.Game;
 
 import java.util.List;
 
 public enum EnemyType {
-    Tree("Tree", List.of("Images/Sprite/T_TreeMonster_0.png"),List.of("Images/Sprite/T_TreeMonster_1.png", "Images/Sprite/T_TreeMonster_2.png"), List.of("Images/Sprite/T_TreeMonsterWalking.png", "Images/Texture2D/T_TreeMonsterWalking.png"), 0, 0) {
+    Tree("Tree", List.of("Images/Sprite/T_TreeMonster_0.png"),List.of("Images/Sprite/T_TreeMonster_1.png", "Images/Sprite/T_TreeMonster_2.png"), List.of("Images/Sprite/T_TreeMonsterWalking.png", "Images/Texture2D/T_TreeMonsterWalking.png"), 0, 2000) {
         @Override
         public int getSpawnCount(float secondsPassed) {
             return 0;
@@ -21,7 +23,7 @@ public enum EnemyType {
         @Override
         public int getSpawnCount(float secondsPassed) {
             float time = (int)(secondsPassed / 10f) * 10f;
-            return Math.max(0, (int)((time - Game.getTime().getTotalSeconds() + 30) / 100));
+            return Math.max(0, (int)((time - Game.getTime().getTotalSeconds() + 30) / 50));
         }
 
     },
@@ -51,6 +53,9 @@ public enum EnemyType {
     private final List<String> idleTexturePaths;
     private final List<String> spawnTexturePaths;
     private final List<String> attackTexurePaths;
+    private static final List<String> deathTexturePaths = List.of("Images/Sprite/DeathFX_0.png", "Images/Sprite/DeathFX_1.png",
+        "Images/Sprite/DeathFX_2.png", "Images/Sprite/DeathFX_3.png");
+    private static final String eyeBatProjectileTexturePath = "Images/Sprite/EyeMonsterProjecitle.png";
     private final int damageRate;
     private final int HP;
     EnemyType(String name, List<String> idleTexturePaths, List<String> spawnTexturePaths, List<String> attackTexturePaths, int damageRate, int HP) {
@@ -74,8 +79,16 @@ public enum EnemyType {
         return attackTexurePaths;
     }
 
+    public static List<String> getDeathTexturePaths() {
+        return deathTexturePaths;
+    }
+
     public int getHP(){
         return HP;
+    }
+
+    public static Texture getEyeBatTexture() {
+        return new Texture(eyeBatProjectileTexturePath);
     }
 
 }

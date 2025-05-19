@@ -14,6 +14,7 @@ public class Game {
 
 
     private static GameTime time = GameTime.TWO;
+    private static GameMap map = new GameMap();
     private static Player currentPlayer;
     private static final ArrayList<Player> players = new ArrayList<>();
     private static Menu currentMenu;
@@ -78,6 +79,9 @@ public class Game {
 
     public static void resetCountdown(float seconds) {
         countdown = seconds;
+    }
+    public static GameMap getMap() {
+        return map;
     }
 
 

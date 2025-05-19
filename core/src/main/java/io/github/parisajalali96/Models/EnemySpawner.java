@@ -41,4 +41,14 @@ public class EnemySpawner {
         TextureRegion[] framesArray = frames.toArray(new TextureRegion[0]);
         return new Animation<>(0.25f, framesArray);
     }
+
+    public static Animation<TextureRegion> loadDeathAnimation() {
+        List<TextureRegion> frames = new ArrayList<>();
+        for (String path : EnemyType.getDeathTexturePaths()) {
+            Texture texture = new Texture(Gdx.files.internal(path));
+            frames.add(new TextureRegion(texture));
+        }
+        TextureRegion[] framesArray = frames.toArray(new TextureRegion[0]);
+        return new Animation<>(0.25f, framesArray);
+    }
 }
