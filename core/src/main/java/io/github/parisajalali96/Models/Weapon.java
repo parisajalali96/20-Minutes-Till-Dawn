@@ -1,7 +1,9 @@
 package io.github.parisajalali96.Models;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 
@@ -14,18 +16,59 @@ public class Weapon {
     private Texture texture;
     private Texture bulletTexture;
     private final List<Projectile> projectiles = new ArrayList<>();
+    private int currentNumOfProjectiles;
+
+    //for reload
+    private Animation<TextureRegion> reloadAnimation;
+    private float reloadAnimTimer = 0f;
+    private boolean reloading = false;
+    private float reloadTimer = 0f;
+    private final float reloadTime;
+
 
     public Weapon(WeaponType type) {
         this.type = type;
         this.texture = type.getTexture();
         this.bulletTexture = WeaponType.getBulletTexture();
+        currentNumOfProjectiles = type.getAmmoMax();
+        reloadTime = type.getTimeReload();
+
+        List<String> reloadAnimationPaths = type.getReloadStagesTextures();
+        TextureRegion[] reloadRegions = new TextureRegion[reloadAnimationPaths.size()];
+
+        for (int i = 0; i < reloadAnimationPaths.size(); i++) {
+            Texture frameTexture = new Texture(reloadAnimationPaths.get(i));
+            reloadRegions[i] = new TextureRegion(frameTexture);
+        }
+        reloadAnimation = new Animation<>(0.25f, reloadRegions);
     }
 
     public void shoot(Vector2 startPosition, Vector2 direction) {
+        //only shoot if weapon has enough ammo
+        if (reloading || currentNumOfProjectiles <= 0) return;
+        currentNumOfProjectiles--;
         projectiles.add(new Projectile(type.getDamage(), startPosition, direction, bulletTexture));
     }
 
+    public void reload(){
+        if(!reloading){
+            reloading = true;
+            reloadTimer = 0f;
+        }
+    }
+
     public void update(float delta) {
+
+        if(reloading){
+            reloadTimer += delta;
+            reloadAnimTimer += delta;
+            if(reloadTimer >= reloadTime){
+                currentNumOfProjectiles = type.getAmmoMax();
+                reloading = false;
+                reloadAnimTimer = 0f;
+            }
+            return;
+        }
         Iterator<Projectile> iter = projectiles.iterator();
         while (iter.hasNext()) {
             Projectile p = iter.next();
@@ -37,20 +80,24 @@ public class Weapon {
     }
 
     public void draw(SpriteBatch batch, Vector2 playerPosition, boolean facingRight) {
-        float weaponX;
+        float weaponX = facingRight ? playerPosition.x + 12 : playerPosition.x;
         float weaponY = playerPosition.y + 5;
 
-        if (facingRight) {
-            weaponX = playerPosition.x + 12;
-            batch.draw(texture, weaponX, weaponY,
-                texture.getWidth(), texture.getHeight());
+        if (reloading) {
+            TextureRegion frame = reloadAnimation.getKeyFrame(reloadAnimTimer, false);
+            if (facingRight) {
+                batch.draw(frame, weaponX, weaponY);
+            } else {
+                batch.draw(frame, weaponX + frame.getRegionWidth(), weaponY, -frame.getRegionWidth(), frame.getRegionHeight());
+            }
         } else {
-            weaponX = playerPosition.x ;
-
-            batch.draw(texture,
-                weaponX + texture.getWidth(), weaponY,
-                -texture.getWidth(), texture.getHeight());
+            if (facingRight) {
+                batch.draw(texture, weaponX, weaponY);
+            } else {
+                batch.draw(texture, weaponX + texture.getWidth(), weaponY, -texture.getWidth(), texture.getHeight());
+            }
         }
+
 
         for (Projectile p : projectiles) {
             p.draw(batch);

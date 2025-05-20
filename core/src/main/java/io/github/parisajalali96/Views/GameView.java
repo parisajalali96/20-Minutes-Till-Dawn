@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameMap;
+import io.github.parisajalali96.Models.KeyControl;
 
 public class GameView implements Screen {
 
@@ -37,6 +38,10 @@ public class GameView implements Screen {
         map.update(delta);
         Game.update(delta);
         Game.getCurrentPlayer().update(delta, this.camera);
+        if (Gdx.input.isKeyJustPressed(KeyControl.reloadWeapon)) {
+            Game.getCurrentPlayer().getWeapon().reload();
+        }
+
 
         // Camera follows player
         camera.position.set(
