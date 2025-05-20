@@ -20,8 +20,8 @@ public class Player {
     private Hero hero;
     private Weapon weapon = new Weapon(WeaponType.REVOLVER);
     private int score;
-    private int health;
-    private int level;
+    private int health ;
+    private int level = 1;
     private int xp;
     private Vector2 position = new Vector2(400, 240);
     private int kills;
@@ -29,7 +29,7 @@ public class Player {
     //animation stuff
     private float shootCooldown = 0.25f;
     private float shootTimer = 0f;
-    private float speed = 200f;
+    private float speed;
     private boolean facingRight = true;
 
     //weapon stuff
@@ -47,6 +47,8 @@ public class Player {
     public Player(User user) {
         this.user = user;
         setRandomHero();
+        health =  hero.getHP();
+        speed = hero.getSpeed();
 
         // Build walk animation from hero
         TextureRegion[] walkFrames = hero.getWalkingFrames();
@@ -197,6 +199,7 @@ public class Player {
     }
     public void addXp(int xp) {
         this.xp += xp;
+        goToNextLevel();
     }
     public void addHealth(int health) {
         this.health += health;
@@ -209,6 +212,16 @@ public class Player {
         return new Rectangle(position.x, position.y,
             currentFrame.getRegionWidth(),
             currentFrame.getRegionHeight());
+    }
+
+    public boolean canGoToNextLevel(){
+        return xp >= level * 20;
+    }
+
+    public void goToNextLevel(){
+        if(canGoToNextLevel()) {
+            level++;
+        }
     }
 
 }

@@ -25,7 +25,8 @@ public class GameView implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        map = new GameMap(); // Your tile-based map system (make sure this uses tile rendering internally)
+        map = new GameMap();
+
     }
 
     @Override
@@ -56,6 +57,13 @@ public class GameView implements Screen {
         String timeText = formatTime(Game.getCountdownTime());
         font.draw(batch, timeText, Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 20);
         batch.end();
+
+        batch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        batch.begin();
+        String health = String.valueOf(Game.getCurrentPlayer().getHealth());
+        font.draw(batch, health, 10, Gdx.graphics.getHeight() - 10);
+        batch.end();
+
     }
 
     private String formatTime(float seconds) {

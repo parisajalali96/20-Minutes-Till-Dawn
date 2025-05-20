@@ -130,11 +130,24 @@ public class GameMap {
             }
         }
 
-        for (Projectile p : enemyProjectiles) {
+        Iterator<Projectile> iter = enemyProjectiles.iterator();
+        while (iter.hasNext()) {
+            Projectile p = iter.next();
             p.update(delta);
+
             if (p.getBounds().overlaps(Game.getCurrentPlayer().getBounds())) {
                 Game.getCurrentPlayer().addHealth(-p.getDamage());
-                // remove if you want it to be one-hit
+                iter.remove();
+            }
+        }
+
+        //adding damage for when enemies hit player
+        Iterator<Enemy> enemyIterator  = enemies.iterator();
+        while(enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            if(enemy.getBounds().overlaps(Game.getCurrentPlayer().getBounds()) && enemy.canAttack()) {
+                Game.getCurrentPlayer().addHealth(-1);
+                enemy.resetCanAttack();
             }
         }
 
@@ -217,7 +230,7 @@ public class GameMap {
         spawnEnemy(type, new Vector2(x, y));
     }
 
-    public void addEnemeyProjectile(Projectile p) {
+    public void addEnemyProjectile(Projectile p) {
         enemyProjectiles.add(p);
     }
 

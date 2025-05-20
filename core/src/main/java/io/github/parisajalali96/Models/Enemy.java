@@ -34,6 +34,9 @@ public class Enemy {
     private float shootingCoolDown = 3f;
     private float shootingTimer = 0f;
 
+    //for attacking
+    private float timeSinceLastAttack = 0f;
+
     public Enemy(EnemyType type, Vector2 position, Animation<TextureRegion> idleAnimation,
                  Animation<TextureRegion> spawnAnimation, Animation<TextureRegion> attackAnimation, Animation<TextureRegion> deathAnimation) {
         this.type = type;
@@ -49,6 +52,7 @@ public class Enemy {
 
     public void update(float delta) {
         stateTime += delta;
+        timeSinceLastAttack += delta;
         if (!isAlive) {
             if (deathAnimation.isAnimationFinished(stateTime)) {
                 deathAnimationPlayed = true;
@@ -86,12 +90,12 @@ public class Enemy {
         }
     }
 
-    //for eyebat to shoot at character
+    //for eyebat to shoot at player
     public void shootPlayer(){
         Vector2 target = Game.getCurrentPlayer().getPosition();
         Vector2 direction = new Vector2(target).sub(position).nor();
-        Projectile enemyProjectile = new Projectile(3, this.position.cpy(), direction, EnemyType.getEyeBatTexture());
-        Game.getMap().addEnemeyProjectile(enemyProjectile);
+        Projectile enemyProjectile = new Projectile(1, this.position.cpy(), direction, EnemyType.getEyeBatTexture());
+        Game.getMap().addEnemyProjectile(enemyProjectile);
     }
 
     public void draw(SpriteBatch batch) {
@@ -200,6 +204,13 @@ public class Enemy {
             currentFrame.getRegionHeight());
     }
 
+    public boolean canAttack(){
+        return timeSinceLastAttack >= 1f;
+    }
+
+    public void resetCanAttack(){
+        timeSinceLastAttack = 0f;
+    }
 
 
 

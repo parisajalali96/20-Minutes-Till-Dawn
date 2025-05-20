@@ -10,11 +10,11 @@ import java.util.Random;
 
 public enum Hero {
     // new format: rows {rowIndex, frameCount}
-    SHANA("Images/Texture2D/T_Shana_Portrait.png", "Images/Texture2D/T_Shana.png", 32, 32, new int[][]{{0, 6},{1,4}, {2,8}}),
-    DIAMOND("Images/Texture2D/T_Diamond_Portrait.png", "Images/Texture2D/T_Diamond #7829.png", 32, 32, new int[][]{{0, 6},{1,4}, {2,8}}),
-    SCARLET("Images/Texture2D/T_Scarlett_Portrait.png", "Images/Texture2D/T_Scarlett.png", 32, 32, new int[][]{{0, 6}, {1,4}}),
-    LILITH("Images/Texture2D/T_Lilith_Portrait.png", "Images/Texture2D/T_Lilith.png", 32, 32, new int[][]{{0, 6},{1,4}, {2,8}}),
-    DASHER("Images/Texture2D/T_Dasher_Portrait.png", "Images/Texture2D/T_Dasher.png", 32, 32, new int[][]{{0, 3}, {1, 4}});
+    SHANA("Images/Texture2D/T_Shana_Portrait.png", "Images/Texture2D/T_Shana.png", 32, 32, new int[][]{{0, 6},{1,4}, {2,8}}, 20, 230),
+    DIAMOND("Images/Texture2D/T_Diamond_Portrait.png", "Images/Texture2D/T_Diamond #7829.png", 32, 32, new int[][]{{0, 6},{1,4}, {2,8}}, 35, 100),
+    SCARLET("Images/Texture2D/T_Scarlett_Portrait.png", "Images/Texture2D/T_Scarlett.png", 32, 32, new int[][]{{0, 6}, {1,4}}, 15, 200),
+    LILITH("Images/Texture2D/T_Lilith_Portrait.png", "Images/Texture2D/T_Lilith.png", 32, 32, new int[][]{{0, 6},{1,4}, {2,8}},25,150 ),
+    DASHER("Images/Texture2D/T_Dasher_Portrait.png", "Images/Texture2D/T_Dasher.png", 32, 32, new int[][]{{0, 3}, {1, 4}},10,250);
 
     private final String portraitTexturePath;
     private final String movementTexturePath;
@@ -22,13 +22,17 @@ public enum Hero {
     private final int frameHeight;
     private final int[][] animationRowsAndCounts;
     private Texture movementTexture;
+    private final int HP;
+    private final int speed;
 
-    Hero(String portraitTexturePath, String movementTexturePath, int frameWidth, int frameHeight, int[][] animationRowsAndCounts) {
+    Hero(String portraitTexturePath, String movementTexturePath, int frameWidth, int frameHeight, int[][] animationRowsAndCounts, int HP, int speed) {
         this.portraitTexturePath = portraitTexturePath;
         this.movementTexturePath = movementTexturePath;
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
         this.animationRowsAndCounts = animationRowsAndCounts;
+        this.HP = HP;
+        this.speed = speed;
     }
 
     public Texture getTexture() {
@@ -60,5 +64,12 @@ public enum Hero {
     public static Hero getRandomHero() {
         Hero[] values = values();
         return values[new Random().nextInt(values.length)];
+    }
+
+    public int getHP() {
+        return HP;
+    }
+    public int getSpeed() {
+        return speed;
     }
 }
