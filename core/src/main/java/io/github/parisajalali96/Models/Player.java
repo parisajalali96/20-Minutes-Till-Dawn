@@ -224,5 +224,13 @@ public class Player {
         }
     }
 
+    public void addSpeed(float speed) {
+        this.speed += speed;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
 }
 

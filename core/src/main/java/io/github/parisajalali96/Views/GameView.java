@@ -25,6 +25,8 @@ public class GameView implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.zoom = 0.7f;
+        camera.update();
 
         map = new GameMap();
 

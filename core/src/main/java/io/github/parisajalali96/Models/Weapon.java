@@ -17,6 +17,9 @@ public class Weapon {
     private Texture bulletTexture;
     private final List<Projectile> projectiles = new ArrayList<>();
     private int currentNumOfProjectiles;
+    private int damage;
+    private int projectile;
+    private int ammo;
 
     //for reload
     private Animation<TextureRegion> reloadAnimation;
@@ -41,13 +44,19 @@ public class Weapon {
             reloadRegions[i] = new TextureRegion(frameTexture);
         }
         reloadAnimation = new Animation<>(0.25f, reloadRegions);
+
+        damage = type.getDamage();
+        projectile = type.getProjectile();
+        ammo = type.getAmmoMax();
     }
 
     public void shoot(Vector2 startPosition, Vector2 direction) {
         //only shoot if weapon has enough ammo
-        if (reloading || currentNumOfProjectiles <= 0) return;
-        currentNumOfProjectiles--;
-        projectiles.add(new Projectile(type.getDamage(), startPosition, direction, bulletTexture));
+        for(int i = 0; i < type.getProjectile(); i ++) {
+            if (reloading || currentNumOfProjectiles <= 0) return;
+            currentNumOfProjectiles--;
+            projectiles.add(new Projectile(type.getDamage(), startPosition, direction, bulletTexture));
+        }
     }
 
     public void reload(){
@@ -63,7 +72,7 @@ public class Weapon {
             reloadTimer += delta;
             reloadAnimTimer += delta;
             if(reloadTimer >= reloadTime){
-                currentNumOfProjectiles = type.getAmmoMax();
+                currentNumOfProjectiles = ammo;
                 reloading = false;
                 reloadAnimTimer = 0f;
             }
@@ -111,6 +120,20 @@ public class Weapon {
     public void dispose() {
         texture.dispose();
         bulletTexture.dispose();
+    }
+
+    public void addDamage(int damage) {
+        this.damage += damage;
+    }
+    public void addProjectile(int projectile) {
+        this.projectile += projectile;
+    }
+    public void addAmmo(int ammo) {
+        this.ammo += ammo;
+    }
+
+    public WeaponType getType() {
+        return type;
     }
 }
 
