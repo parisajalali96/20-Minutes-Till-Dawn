@@ -2,6 +2,9 @@ package io.github.parisajalali96.Models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAssetManager {
@@ -45,5 +48,17 @@ public class GameAssetManager {
             gameAssetManager = new GameAssetManager();
         }
         return gameAssetManager;
+    }
+
+    public static Animation<TextureRegion> getHeartAnimation(){
+        TextureRegion[] hearts = new TextureRegion[3];
+        hearts[0] = new TextureRegion(new Texture("Images/Sprite/HeartAnimation_0.png"));
+        hearts[1] = new TextureRegion(new Texture("Images/Sprite/HeartAnimation_1.png"));
+        hearts[2] = new TextureRegion(new Texture("Images/Sprite/HeartAnimation_2.png"));
+        return new Animation<>(0.25f, hearts);
+    }
+
+    public static TextureRegion getEmptyHeart(){
+        return new TextureRegion(new Texture("Images/Sprite/HeartAnimation_3.png"));
     }
 }

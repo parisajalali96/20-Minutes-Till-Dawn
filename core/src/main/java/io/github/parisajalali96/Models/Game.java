@@ -73,7 +73,6 @@ public class Game {
             Game.getGameView().getController().endGame(true);
         }
 
-        //TODO implement end game
     }
 
     public static float getCountdownTime() {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -56,6 +57,11 @@ public class GameView implements Screen {
     private Stage cheatCodeStage;
     private boolean cheatCodeActive = false;
 
+    //defaults
+    private Stage defaultsStage;
+    private float animationStateTime = 0f;
+    private Table healthBar;
+
 
     @Override
     public void show() {
@@ -64,6 +70,11 @@ public class GameView implements Screen {
         abilityStage = new Stage();
         winStage = new Stage();
         cheatCodeStage = new Stage();
+        defaultsStage = new Stage();
+        healthBar = new Table();
+        healthBar = new Table();
+        healthBar.top().left().padTop(10).padLeft(10);
+        defaultsStage.addActor(healthBar);
         Gdx.input.setInputProcessor(abilityStage);
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -82,6 +93,8 @@ public class GameView implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
+        updateHealthBar(delta);
 
         if (abilityOptions != null && abilityStage.getActors().size == 0) {
             isPaused = true;
@@ -150,6 +163,8 @@ public class GameView implements Screen {
             cheatCodeStage.draw();
         }
 
+        defaultsStage.act(delta);
+        defaultsStage.draw();
 
     }
 
@@ -356,6 +371,36 @@ public class GameView implements Screen {
         cheatCodeStage.addActor(container);
         Gdx.input.setInputProcessor(cheatCodeStage);
     }
+
+    //health bar
+    public void updateHealthBar(float delta){
+        animationStateTime += delta;
+
+        healthBar.clear();
+
+        int maxHearts = 5;
+        int heartsToFill = (int) Math.round((double) Game.getCurrentPlayer().getHealth() / Game.getCurrentPlayer().getHero().getHP() * maxHearts);
+
+        Animation<TextureRegion> hearts = GameAssetManager.getHeartAnimation();
+        TextureRegion emptyHeart = GameAssetManager.getEmptyHeart();
+
+        for (int i = 1; i <= maxHearts; i++) {
+            Image heartImage;
+            if (i <= heartsToFill) {
+                TextureRegion currentFrame = hearts.getKeyFrame(animationStateTime, true);
+                heartImage = new Image(currentFrame);
+            } else {
+                heartImage = new Image(emptyHeart);
+            }
+
+            heartImage.setSize(24, 24);
+            healthBar.add(heartImage).padRight(5);
+        }
+
+        healthBar.pack();
+        healthBar.setPosition(10, Gdx.graphics.getHeight() - healthBar.getHeight() - 10);
+    }
+
 
     @Override
     public void resize(int width, int height) {
