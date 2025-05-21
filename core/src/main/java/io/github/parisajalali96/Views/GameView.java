@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -51,6 +52,10 @@ public class GameView implements Screen {
     private Stage winStage;
     private boolean endGamePopupActive = false;
 
+    //cheat code pop up
+    private Stage cheatCodeStage;
+    private boolean cheatCodeActive = false;
+
 
     @Override
     public void show() {
@@ -58,6 +63,7 @@ public class GameView implements Screen {
         skin = GameAssetManager.getGameAssetManager().getSkin();
         abilityStage = new Stage();
         winStage = new Stage();
+        cheatCodeStage = new Stage();
         Gdx.input.setInputProcessor(abilityStage);
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -83,7 +89,7 @@ public class GameView implements Screen {
             //return;
         }
 
-        if(endGamePopupActive) {
+        if(endGamePopupActive || cheatCodeActive) {
             isPaused = true;
             //return;
         }
@@ -95,9 +101,11 @@ public class GameView implements Screen {
 
             if (Gdx.input.isKeyJustPressed(KeyControl.reloadWeapon)) {
                 Game.getCurrentPlayer().getWeapon().reload();
+            } else if(Gdx.input.isKeyJustPressed(KeyControl.cheatCodeMenu)) {
+                cheatCodeActive = true;
+                cheatCodeMenuPopUp();
             }
 
-            if
         }
 
 
@@ -136,6 +144,10 @@ public class GameView implements Screen {
         if(endGamePopupActive) {
             winStage.act(Gdx.graphics.getDeltaTime());
             winStage.draw();
+        }
+        if(cheatCodeActive) {
+            cheatCodeStage.act(Gdx.graphics.getDeltaTime());
+            cheatCodeStage.draw();
         }
 
 
@@ -249,6 +261,100 @@ public class GameView implements Screen {
         container.add(window).width(600).height(400);
         winStage.addActor(container);
         Gdx.input.setInputProcessor(winStage);
+    }
+
+    //cheat code menu pop up
+    public void cheatCodeMenuPopUp(){
+        cheatCodeActive = true;
+        cheatCodeStage.clear();
+
+        Table container = new Table();
+        container.setFillParent(true);
+        container.center();
+
+        Table window = new Table(skin);
+        window.setBackground(skin.newDrawable("window", Color.BLACK.cpy().mul(0.85f)));
+        window.pad(100);
+
+        Label errorLabel = new Label("- NO SUCH CHEAT CODE -", skin);
+        errorLabel.setAlignment(Align.center);
+        errorLabel.setVisible(false);
+        window.add(errorLabel).colspan(2).padBottom(20).row();
+
+        Label title = new Label("Cheat Code Menu", skin, "title");
+        title.setAlignment(Align.center);
+        window.add(title).colspan(2).padBottom(20).row();
+
+        Label text = new Label("Type the secret code:", skin);
+        text.setAlignment(Align.center);
+        window.add(text).colspan(2).padBottom(20).row();
+
+        TextField cheatCodeInput = new TextField("", skin);
+        cheatCodeInput.setAlignment(Align.center);
+        window.add(cheatCodeInput).width(400).colspan(2).padBottom(5).row();
+
+
+        TextButton confirmButton = new TextButton("Confirm", skin);
+        confirmButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String code = cheatCodeInput.getText().toUpperCase().trim();
+                boolean valid = true;
+
+                switch (code) {
+                    case "TIMEMACHINE":
+                        controller.gameTimeCheatCode();
+                        break;
+                    case "LEVELBOOST":
+                        controller.playerLevelCheatCode();
+                        break;
+                    case "CPR":
+                        controller.playerHPCheatCode();
+                        break;
+                    case "BIGBOSS":
+                        controller.bossFightCheatCode();
+                        break;
+                    case "STORMRIDER":
+                        controller.doubleMaxSpeedCheatCode();
+                        break;
+                    default:
+                        valid = false;
+                        break;
+                }
+
+                if (valid) {
+                    cheatCodeInput.clear();
+                    Gdx.input.setInputProcessor(null);
+                    abilityOptions = null;
+                    cheatCodeActive = false;
+                    isPaused = false;
+                    cheatCodeStage.clear();
+                } else {
+                    errorLabel.setVisible(true);
+
+                    cheatCodeStage.addAction(Actions.sequence(
+                        Actions.delay(1f),
+                        Actions.run(() -> {
+                            cheatCodeStage.clear();
+                            cheatCodeActive = false;
+                            isPaused = false;
+                            abilityOptions = null;
+                            Gdx.input.setInputProcessor(null);
+                        })
+                    ));
+
+                    cheatCodeInput.setText("");
+                }
+
+            }
+        });
+
+
+        window.add(confirmButton).padTop(30).colspan(2).center().row();
+
+        container.add(window).width(950).height(500);
+        cheatCodeStage.addActor(container);
+        Gdx.input.setInputProcessor(cheatCodeStage);
     }
 
     @Override

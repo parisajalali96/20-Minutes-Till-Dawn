@@ -68,19 +68,16 @@ public class Game {
         addSecondsPassed(delta);
 
         //countdown
-        if (countdown > 0) {
-            countdown -= delta;
-            if (countdown < 0) {
-                countdown = 0;
-                Game.getGameView().getController().endGame(true);
-            }
+        if (getCountdownTime() < 0) {
+            secondsPassed = time.getTotalSeconds();
+            Game.getGameView().getController().endGame(true);
         }
 
         //TODO implement end game
     }
 
     public static float getCountdownTime() {
-        return countdown;
+        return time.getTotalSeconds() - secondsPassed;
     }
 
     public static void resetCountdown(float seconds) {

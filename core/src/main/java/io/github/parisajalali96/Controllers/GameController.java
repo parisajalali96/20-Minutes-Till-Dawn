@@ -53,7 +53,7 @@ public class GameController {
 
     //extra cheat code (extra speed)
     public void doubleMaxSpeedCheatCode(){
-        Game.getCurrentPlayer().setInitialSpeed(Game.getCurrentPlayer().getSpeed()*2);
+        Game.getCurrentPlayer().addSpeed(Game.getCurrentPlayer().getSpeed());
     }
 
 

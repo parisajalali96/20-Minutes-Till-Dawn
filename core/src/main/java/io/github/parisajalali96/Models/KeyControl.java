@@ -9,7 +9,8 @@ public class KeyControl {
     public static int right = Input.Keys.RIGHT;
     public static int shootWeapon = Input.Buttons.LEFT;
     public static int reloadWeapon = Input.Keys.R;
-    
+    public static int cheatCodeMenu = Input.Keys.C;
+
 
 
 }

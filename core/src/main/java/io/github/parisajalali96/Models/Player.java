@@ -33,7 +33,6 @@ public class Player {
     //animation stuff
     private float shootCooldown = 0.25f;
     private float shootTimer = 0f;
-    private float initialSpeed;
     private float speed;
     private boolean facingRight = true;
 
@@ -60,8 +59,7 @@ public class Player {
         this.user = user;
         setRandomHero();
         health =  hero.getHP();
-        initialSpeed = hero.getSpeed();
-        speed = initialSpeed;
+        speed = hero.getSpeed();
 
         TextureRegion[] walkFrames = hero.getWalkingFrames();
         walkAnimation = new Animation<>(0.1f, walkFrames);
@@ -129,7 +127,7 @@ public class Player {
             abilityTimer += delta;
             if(abilityTimer >= abilityTimeLine) {
                 abilityTimer = 0f;
-                if(currentAbility == AbilityType.SPEEDY) speed = initialSpeed;
+                if(currentAbility == AbilityType.SPEEDY) speed *= (float) 1 /2;
                 else if(currentAbility == AbilityType.DAMAGER) weapon.addDamage((int) (-weapon.getType().getDamage()*0.25));
                 currentAbility = null;
             }
@@ -270,8 +268,6 @@ public class Player {
         return level;
     }
 
-    public void setInitialSpeed(float maxSpeed) {
-        this.initialSpeed = maxSpeed;
-    }
+
 }
 
