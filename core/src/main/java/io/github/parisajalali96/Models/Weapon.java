@@ -135,5 +135,8 @@ public class Weapon {
     public WeaponType getType() {
         return type;
     }
+    public int getAmmo() {
+        return currentNumOfProjectiles;
+    }
 }
 

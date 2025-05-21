@@ -65,7 +65,7 @@ public class Game {
     }
 
     public static void update(float delta) {
-        addSecondsPassed(delta);
+        //addSecondsPassed(delta);
 
         //countdown
         if (getCountdownTime() < 0) {

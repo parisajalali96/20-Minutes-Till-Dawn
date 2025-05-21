@@ -2,6 +2,7 @@ package io.github.parisajalali96.Models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -60,5 +61,9 @@ public class GameAssetManager {
 
     public static TextureRegion getEmptyHeart(){
         return new TextureRegion(new Texture("Images/Sprite/HeartAnimation_3.png"));
+    }
+
+    public static TextureRegion getBulletTexture(){
+        return new TextureRegion(new Texture("Images/Sprite/T_AmmoIcon.png"));
     }
 }

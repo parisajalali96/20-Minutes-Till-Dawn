@@ -72,7 +72,7 @@ public class GameMap {
 
         spawnTimer += delta;
         if (spawnTimer >= 1f) {
-            spawnTimer -= 1f;
+            spawnTimer = 0;
             for (EnemyType type : EnemyType.values()) {
                 int countToSpawn = type.getSpawnCount((int) Game.getSecondsPassed());
                 for (int i = 0; i < countToSpawn; i++) {

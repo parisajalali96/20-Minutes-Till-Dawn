@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import io.github.parisajalali96.Controllers.GameController;
 import io.github.parisajalali96.Controllers.MainMenuController;
@@ -61,7 +62,13 @@ public class GameView implements Screen {
     private Stage defaultsStage;
     private float animationStateTime = 0f;
     private Table healthBar;
+    private Array<Image> heartImages = new Array<>();
+    private Label bulletCountLabel;
+    private Label killsLabel;
 
+    //time countdown
+    private Label timeLabel;
+    private Label surviveLabel;
 
     @Override
     public void show() {
@@ -85,8 +92,58 @@ public class GameView implements Screen {
         camera.update();
 
         map = new GameMap();
+        timeLabel = new Label("", skin, "title");
+        timeLabel.setAlignment(Align.right);
+        timeLabel.setPosition(Gdx.graphics.getWidth(), 0);
+        surviveLabel = new Label("Survive!", skin, "subtitle");
+        surviveLabel.setAlignment(Align.right);
+
+        for(TextureRegion t : GameAssetManager.getHeartAnimation().getKeyFrames()) {
+            heartImages.add(new Image(new TextureRegion(t)));
+        }
+        initHealthBar();
 
     }
+
+    public void initHealthBar() {
+        int maxHearts = 5;
+        healthBar.clear();
+        heartImages.clear();
+
+        Table heartsRow = new Table();
+        for (int i = 0; i < maxHearts; i++) {
+            Image heart = new Image(GameAssetManager.getEmptyHeart());
+            heart.setSize(24, 24);
+            heartsRow.add(heart).padRight(5);
+            heartImages.add(heart);
+        }
+        healthBar.add(heartsRow).left().row();
+
+        // Bullet row
+        Image bulletIcon = new Image(GameAssetManager.getBulletTexture());
+        bulletIcon.setSize(24, 24);
+        bulletIcon.setScaling(Scaling.fit);
+
+        bulletCountLabel = new Label("", skin);
+        bulletCountLabel.setFontScale(1.2f);
+        bulletCountLabel.setAlignment(Align.left);
+
+        Table bulletRow = new Table();
+        bulletRow.add(bulletIcon).padRight(5);
+        bulletRow.add(bulletCountLabel).left();
+
+        healthBar.add(bulletRow).left().row();
+
+        // Kills row
+        killsLabel = new Label("", skin);
+        killsLabel.setFontScale(1.2f);
+        killsLabel.setAlignment(Align.left);
+        healthBar.add(killsLabel).left().padTop(3f).row();
+
+        healthBar.pack();
+        healthBar.setPosition(10, Gdx.graphics.getHeight() - healthBar.getHeight() - 10);
+    }
+
 
     @Override
     public void render(float delta) {
@@ -137,17 +194,18 @@ public class GameView implements Screen {
         Game.getCurrentPlayer().draw(batch);
         batch.end();
 
-        batch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        batch.begin();
         String timeText = formatTime(Game.getCountdownTime());
-        font.draw(batch, timeText, Gdx.graphics.getWidth() - 80, Gdx.graphics.getHeight() - 20);
-        batch.end();
+        timeLabel.setText(timeText);
+        timeLabel.setPosition(Gdx.graphics.getWidth() - 20, Gdx.graphics.getHeight() - 60);
+        surviveLabel.setPosition(Gdx.graphics.getWidth() - 220, Gdx.graphics.getHeight() - 150);
 
         batch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         batch.begin();
-        String health = String.valueOf(Game.getCurrentPlayer().getHealth());
-        font.draw(batch, health, 10, Gdx.graphics.getHeight() - 10);
+        timeLabel.draw(batch, 1);
+        surviveLabel.draw(batch, 1);
         batch.end();
+
+
 
         if (abilityStage != null && abilityStage.getActors().size > 0) {
             abilityStage.act(Gdx.graphics.getDeltaTime());
@@ -373,33 +431,32 @@ public class GameView implements Screen {
     }
 
     //health bar
-    public void updateHealthBar(float delta){
+    public void updateHealthBar(float delta) {
         animationStateTime += delta;
 
-        healthBar.clear();
+        int currentHP = Game.getCurrentPlayer().getHealth();
+        int maxHP = Game.getCurrentPlayer().getHero().getHP();
+        int filledHearts = (int) Math.round((double) currentHP / maxHP * heartImages.size);
 
-        int maxHearts = 5;
-        int heartsToFill = (int) Math.round((double) Game.getCurrentPlayer().getHealth() / Game.getCurrentPlayer().getHero().getHP() * maxHearts);
-
-        Animation<TextureRegion> hearts = GameAssetManager.getHeartAnimation();
+        Animation<TextureRegion> heartAnim = GameAssetManager.getHeartAnimation();
         TextureRegion emptyHeart = GameAssetManager.getEmptyHeart();
 
-        for (int i = 1; i <= maxHearts; i++) {
-            Image heartImage;
-            if (i <= heartsToFill) {
-                TextureRegion currentFrame = hearts.getKeyFrame(animationStateTime, true);
-                heartImage = new Image(currentFrame);
+        for (int i = 0; i < heartImages.size; i++) {
+            Image heart = heartImages.get(i);
+            if (i < filledHearts) {
+                heart.setDrawable(new TextureRegionDrawable(heartAnim.getKeyFrame(animationStateTime, true)));
             } else {
-                heartImage = new Image(emptyHeart);
+                heart.setDrawable(new TextureRegionDrawable(emptyHeart));
             }
-
-            heartImage.setSize(24, 24);
-            healthBar.add(heartImage).padRight(5);
         }
 
-        healthBar.pack();
-        healthBar.setPosition(10, Gdx.graphics.getHeight() - healthBar.getHeight() - 10);
+        int ammoLeft = Game.getCurrentPlayer().getWeapon().getAmmo();
+        int maxAmmo = Game.getCurrentPlayer().getWeapon().getType().getAmmoMax();
+        bulletCountLabel.setText(ammoLeft + "\\" + maxAmmo);
+
+        killsLabel.setText("Kills: " + Game.getCurrentPlayer().getKills());
     }
+
 
 
     @Override

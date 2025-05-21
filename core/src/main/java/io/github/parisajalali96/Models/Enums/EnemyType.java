@@ -16,14 +16,15 @@ public enum EnemyType {
     TentacleMonster("Tentacle Monster", List.of("Images/Sprite/TentacleIdle0.png", "Images/Sprite/TentacleIdle1.png", "Images/Sprite/TentacleIdle2.png", "Images/Sprite/TentacleIdle3.png"), List.of("Images/Sprite/TentacleSpawn0.png", "Images/Sprite/TentacleSpawn1.png", "Images/Sprite/TentacleSpawn2.png"),List.of("Images/Sprite/T_TentacleAttack.png"),0, 25) {
         @Override
         public int getSpawnCount(float secondsPassed) {
-            return (int) (secondsPassed / 3) / 30;
+            if(secondsPassed % 3 == 0) return (int) (secondsPassed / 30);
+            else return 0;
         }
     },
     Eyebat("Eyebat", List.of(), List.of(),List.of("Images/Sprite/T_EyeBat_0.png", "Images/Sprite/T_EyeBat_1.png", "Images/Sprite/T_EyeBat_2.png", "Images/Sprite/T_EyeBat_3.png"), 3, 50) {
         @Override
         public int getSpawnCount(float secondsPassed) {
             float time = (int)(secondsPassed / 10f) * 10f;
-            return Math.max(0, (int)((time - Game.getTime().getTotalSeconds() + 30) / 50));
+            return Math.max(0, (int)(time - Game.getTime().getTotalSeconds() + 30) / 50);
         }
 
     },
@@ -44,7 +45,8 @@ public enum EnemyType {
     BrainMonster("Brain Monster", List.of(), List.of(), List.of("Images/Sprite/BrainMonster_0.png", "Images/Sprite/BrainMonster_1.png", "Images/Sprite/BrainMonster_2.png", "Images/Sprite/BrainMonster_3.png"), 1, 25) {
         @Override
         public int getSpawnCount(float secondsPassed) {
-            return (int) (secondsPassed / 3) / 30;
+            if(secondsPassed % 3 == 0) return (int) (secondsPassed / 30);
+            else return 0;
         }
     };
 
