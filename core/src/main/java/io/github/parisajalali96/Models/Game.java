@@ -3,6 +3,7 @@ package io.github.parisajalali96.Models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.parisajalali96.Controllers.GameController;
 import io.github.parisajalali96.Views.GameView;
 import models.Enums.GameTime;
 import models.Enums.Menu;
@@ -69,7 +70,10 @@ public class Game {
         //countdown
         if (countdown > 0) {
             countdown -= delta;
-            if (countdown < 0) countdown = 0;
+            if (countdown < 0) {
+                countdown = 0;
+                Game.getGameView().getController().endGame(true);
+            }
         }
 
         //TODO implement end game
@@ -93,6 +97,8 @@ public class Game {
     public static void setGameView(GameView gameView) {
         Game.gameView = gameView;
     }
+
+
 
 
 }

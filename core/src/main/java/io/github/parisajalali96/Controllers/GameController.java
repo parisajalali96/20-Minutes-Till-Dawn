@@ -1,6 +1,7 @@
 package io.github.parisajalali96.Controllers;
 
 import io.github.parisajalali96.Models.Enums.AbilityType;
+import io.github.parisajalali96.Models.Enums.EnemyType;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Views.GameView;
 
@@ -23,5 +24,40 @@ public class GameController {
         Collections.shuffle(available);
         return available.subList(0, Math.min(3, available.size()));
     }
+
+    public void endGame(boolean win) {
+        view.endGameWindow(win);
+    }
+
+    //increases passed time one minute
+    public void gameTimeCheatCode(){
+        Game.addSecondsPassed(60f);
+    }
+
+    //add player level
+    public void playerLevelCheatCode(){
+        Game.getCurrentPlayer().addXp
+            (Game.getCurrentPlayer().getLevel()*20 - Game.getCurrentPlayer().getXp());
+    }
+
+    //add HP
+    public void playerHPCheatCode(){
+        if(Game.getCurrentPlayer().getHealth() == 0) Game.getCurrentPlayer().
+            addHealth(Game.getCurrentPlayer().getHero().getHP());
+    }
+
+    //initialize boss fight
+    public void bossFightCheatCode(){
+        Game.getMap().spawnEnemy(EnemyType.Elder, Game.getMap().getRandomSpawnPosition());
+    }
+
+    //extra cheat code (extra speed)
+    public void doubleMaxSpeedCheatCode(){
+        Game.getCurrentPlayer().setInitialSpeed(Game.getCurrentPlayer().getSpeed()*2);
+    }
+
+
+
+
 
 }

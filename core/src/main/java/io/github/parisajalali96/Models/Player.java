@@ -33,6 +33,7 @@ public class Player {
     //animation stuff
     private float shootCooldown = 0.25f;
     private float shootTimer = 0f;
+    private float initialSpeed;
     private float speed;
     private boolean facingRight = true;
 
@@ -59,12 +60,12 @@ public class Player {
         this.user = user;
         setRandomHero();
         health =  hero.getHP();
-        speed = hero.getSpeed();
+        initialSpeed = hero.getSpeed();
+        speed = initialSpeed;
 
-        // Build walk animation from hero
         TextureRegion[] walkFrames = hero.getWalkingFrames();
         walkAnimation = new Animation<>(0.1f, walkFrames);
-        idleFrame = walkFrames[0]; // Default idle frame
+        idleFrame = walkFrames[0];
     }
 
     public void setRandomHero() {
@@ -128,7 +129,7 @@ public class Player {
             abilityTimer += delta;
             if(abilityTimer >= abilityTimeLine) {
                 abilityTimer = 0f;
-                if(currentAbility == AbilityType.SPEEDY) speed *= (float) 1 /2;
+                if(currentAbility == AbilityType.SPEEDY) speed = initialSpeed;
                 else if(currentAbility == AbilityType.DAMAGER) weapon.addDamage((int) (-weapon.getType().getDamage()*0.25));
                 currentAbility = null;
             }
@@ -231,6 +232,10 @@ public class Player {
     }
     public void addHealth(int health) {
         this.health += health;
+        if(this.health <= 0) {
+            this.health = 0;
+            Game.getGameView().getController().endGame(false);
+        }
     }
 
     public Rectangle getBounds() {
@@ -243,7 +248,7 @@ public class Player {
     }
 
     public boolean canGoToNextLevel(){
-        return true;
+        return xp >= level*20;
     }
 
     public void goToNextLevel(){
@@ -265,5 +270,8 @@ public class Player {
         return level;
     }
 
+    public void setInitialSpeed(float maxSpeed) {
+        this.initialSpeed = maxSpeed;
+    }
 }
 

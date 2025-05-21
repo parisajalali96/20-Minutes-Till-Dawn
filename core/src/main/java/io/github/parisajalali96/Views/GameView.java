@@ -17,6 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import io.github.parisajalali96.Controllers.GameController;
+import io.github.parisajalali96.Controllers.MainMenuController;
+import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
@@ -38,12 +41,23 @@ public class GameView implements Screen {
     private Skin skin;
     private boolean isPaused = false;
 
+    //controller
+    private final GameController controller = new GameController();
+    {
+        controller.setView(this);
+    }
+
+    //win pop up
+    private Stage winStage;
+    private boolean endGamePopupActive = false;
+
 
     @Override
     public void show() {
         Game.setGameView(this);
         skin = GameAssetManager.getGameAssetManager().getSkin();
         abilityStage = new Stage();
+        winStage = new Stage();
         Gdx.input.setInputProcessor(abilityStage);
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -66,7 +80,12 @@ public class GameView implements Screen {
         if (abilityOptions != null && abilityStage.getActors().size == 0) {
             isPaused = true;
             showAbilityOptions();
-            return;
+            //return;
+        }
+
+        if(endGamePopupActive) {
+            isPaused = true;
+            //return;
         }
 
         if (!isPaused) {
@@ -77,6 +96,8 @@ public class GameView implements Screen {
             if (Gdx.input.isKeyJustPressed(KeyControl.reloadWeapon)) {
                 Game.getCurrentPlayer().getWeapon().reload();
             }
+
+            if
         }
 
 
@@ -112,6 +133,11 @@ public class GameView implements Screen {
             abilityStage.draw();
         }
 
+        if(endGamePopupActive) {
+            winStage.act(Gdx.graphics.getDeltaTime());
+            winStage.draw();
+        }
+
 
     }
 
@@ -129,22 +155,20 @@ public class GameView implements Screen {
         container.center();
 
         Table window = new Table(skin);
-        window.setBackground(skin.newDrawable("window", Color.BLACK.cpy().mul(0.85f)));
-        window.pad(100);
+        window.setBackground(skin.newDrawable("window", Color.BLACK.cpy().mul(0.75f)));
+        window.pad(40);
 
         float buttonSize = 140f;
-        float popupWidth = abilityOptions.size() * (buttonSize + 40);
-        float popupHeight = 320f;
 
-        window.defaults().pad(40);
+        window.defaults().pad(10);
 
         Label levelUp = new Label("Level " + Game.getCurrentPlayer().getLevel(), skin, "title");
         levelUp.setAlignment(Align.center);
-        window.add(levelUp).colspan(abilityOptions.size()).padBottom(10).row();
+        window.add(levelUp).colspan(abilityOptions.size()).padBottom(5).row();
 
         Label title = new Label("Choose an Ability", skin);
         title.setAlignment(Align.center);
-        window.add(title).colspan(abilityOptions.size()).padBottom(15).row();
+        window.add(title).colspan(abilityOptions.size()).padBottom(10).row();
 
         for (AbilityType ability : abilityOptions) {
             Texture icon = ability.getIcon();
@@ -161,7 +185,7 @@ public class GameView implements Screen {
 
             Table abilityCell = new Table();
             abilityCell.add(button).size(buttonSize, buttonSize).row();
-            abilityCell.add(nameLabel).width(buttonSize + 20).padTop(10);
+            abilityCell.add(nameLabel).width(buttonSize + 20).padTop(5);
 
             button.addListener(new ClickListener() {
                 @Override
@@ -175,16 +199,57 @@ public class GameView implements Screen {
                 }
             });
 
-            window.add(abilityCell).pad(15);
+            window.add(abilityCell).pad(10);
         }
 
-        container.add(window).width(abilityOptions.size() * 140).height(250);
+        container.add(window).width(abilityOptions.size() * 180).height(280);
         abilityStage.addActor(container);
 
         Gdx.input.setInputProcessor(abilityStage);
     }
 
+    //for win/lose status
+    public void endGameWindow(boolean win) {
+        endGamePopupActive = true;
+        winStage.clear();
 
+        Table container = new Table();
+        container.setFillParent(true);
+        container.center();
+
+        Table window = new Table(skin);
+        window.setBackground(skin.newDrawable("window", Color.BLACK.cpy().mul(0.85f)));
+        window.pad(100);
+
+        //status label
+        String statusText = win ? "YOU WIN!" : "YOU LOSE!";
+        Label statusLabel = new Label(statusText, skin, "title");
+        statusLabel.setAlignment(Align.center);
+        window.add(statusLabel).colspan(2).padBottom(20).row();
+
+        Label killsLabel = new Label("Total Kills: " + Game.getCurrentPlayer().getKills(), skin);
+        Label scoreLabel = new Label("Total Score: " + Game.getCurrentPlayer().getScore(), skin);
+        killsLabel.setAlignment(Align.center);
+        scoreLabel.setAlignment(Align.center);
+
+        window.add(killsLabel).colspan(10).row();
+        window.add(scoreLabel).colspan(10).row();
+
+        TextButton exitButton = new TextButton("Continue", skin);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Main.getMain().setScreen(new MainMenu(new MainMenuController(),
+                    GameAssetManager.getGameAssetManager().getSkin()));
+            }
+        });
+
+        window.add(exitButton).padTop(30).colspan(2).center().row();
+
+        container.add(window).width(600).height(400);
+        winStage.addActor(container);
+        Gdx.input.setInputProcessor(winStage);
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -208,6 +273,10 @@ public class GameView implements Screen {
 
     public void setAbilityOptions(List<AbilityType> abilityOptions) {
         this.abilityOptions = abilityOptions;
+    }
+
+    public GameController getController() {
+        return controller;
     }
 
 }
