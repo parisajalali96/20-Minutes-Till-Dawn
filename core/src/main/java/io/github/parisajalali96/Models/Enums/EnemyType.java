@@ -7,7 +7,7 @@ import io.github.parisajalali96.Models.Game;
 import java.util.List;
 
 public enum EnemyType {
-    Tree("Tree", List.of("Images/Sprite/T_TreeMonster_0.png"),List.of("Images/Sprite/T_TreeMonster_1.png", "Images/Sprite/T_TreeMonster_2.png"), List.of("Images/Sprite/T_TreeMonsterWalking.png", "Images/Texture2D/T_TreeMonsterWalking.png"), 0, 2000) {
+    Tree("Tree", List.of("Images/Sprite/T_TreeMonster_0.png"),List.of("Images/Sprite/T_TreeMonster_1.png", "Images/Sprite/T_TreeMonster_2.png"), List.of("Images/Sprite/T_TreeMonsterWalking.png", "Images/Texture2D/T_TreeMonsterWalking.png"), 0, 1) {
         @Override
         public int getSpawnCount(float secondsPassed) {
             return 0;

@@ -3,6 +3,7 @@ package io.github.parisajalali96.Models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import io.github.parisajalali96.Views.GameView;
 import models.Enums.GameTime;
 import models.Enums.Menu;
 
@@ -20,6 +21,7 @@ public class Game {
     private static Menu currentMenu;
     private static float secondsPassed = 0f;
     private static float countdown = time.getTotalSeconds();
+    private static GameView gameView = new GameView();
 
     public static List<User> getRegisteredUsers() throws IOException {
         return UserStorage.loadUsers();
@@ -82,6 +84,14 @@ public class Game {
     }
     public static GameMap getMap() {
         return map;
+    }
+
+    public static GameView getGameView() {
+        return gameView;
+    }
+
+    public static void setGameView(GameView gameView) {
+        Game.gameView = gameView;
     }
 
 

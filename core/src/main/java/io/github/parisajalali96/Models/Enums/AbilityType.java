@@ -1,12 +1,13 @@
 package io.github.parisajalali96.Models.Enums;
 
+import com.badlogic.gdx.graphics.Texture;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.Player;
 import io.github.parisajalali96.Models.Weapon;
 
 public enum AbilityType {
 
-    VITALITY("Vitality")
+    VITALITY("Vitality", "Images/Sprite/Icon_SoothingWarmth.png")
         {
             //increase health
             @Override
@@ -14,7 +15,7 @@ public enum AbilityType {
                 Game.getCurrentPlayer().addHealth(1);
             }
         },
-    DAMAGER("Damager")
+    DAMAGER("Damager", "Images/Sprite/Icon_Assassin.png")
         {
             //increase weapon damage for 10 seconds
             @Override
@@ -23,7 +24,7 @@ public enum AbilityType {
                 weapon.addDamage((int) (weapon.getType().getDamage()*0.25));
             }
         },
-    PROCREASE("Procrease")
+    PROCREASE("Procrease", "Images/Sprite/Icon_Recharge.png")
         {
             //increase weapon projectile
             @Override
@@ -32,7 +33,7 @@ public enum AbilityType {
                 weapon.addProjectile(1);
             }
         },
-    AMOCREASE("Amocrease")
+    AMOCREASE("Amocrease", "Images/Sprite/Icon_Sniper.png")
         {
             //increase ammo
             @Override
@@ -41,7 +42,7 @@ public enum AbilityType {
                 weapon.addAmmo(5);
             }
         },
-    SPEEDY("Speedy")
+    SPEEDY("Speedy", "Images/Sprite/Icon_Electro_Affinity.png")
         {
             //double speed for 10 seconds
             @Override
@@ -52,8 +53,16 @@ public enum AbilityType {
         };
 
     private final String name;
-    AbilityType(String name) {
+    private final String imagePath;
+    AbilityType(String name, String imagePath) {
         this.name = name;
+        this.imagePath = imagePath;
     }
     public abstract void useAbility();
+    public String getName() {
+        return name;
+    }
+    public Texture getIcon(){
+        return new Texture(imagePath);
+    }
 }

@@ -9,9 +9,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import io.github.parisajalali96.Controllers.GameController;
+import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Enums.Hero;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -43,6 +47,13 @@ public class Player {
     private float stateTime = 0f;
     private boolean isMoving = false;
     private TextureRegion idleFrame;
+
+    //abilities
+    private AbilityType currentAbility;
+    private float abilityTimer = 0f;
+    private float abilityTimeLine = 10f;
+
+
 
     public Player(User user) {
         this.user = user;
@@ -77,6 +88,12 @@ public class Player {
         this.score = score;
     }
 
+
+
+    public void addAbility(AbilityType ability) {
+        currentAbility = ability;
+    }
+
     public User getUser() {
         return user;
     }
@@ -105,6 +122,17 @@ public class Player {
     }
 
     public void update(float delta, OrthographicCamera camera) {
+
+        //timer on abilities
+        if(currentAbility != null) {
+            abilityTimer += delta;
+            if(abilityTimer >= abilityTimeLine) {
+                abilityTimer = 0f;
+                if(currentAbility == AbilityType.SPEEDY) speed *= (float) 1 /2;
+                else if(currentAbility == AbilityType.DAMAGER) weapon.addDamage((int) (-weapon.getType().getDamage()*0.25));
+                currentAbility = null;
+            }
+        }
         float moveX = 0f;
         float moveY = 0f;
 
@@ -215,12 +243,14 @@ public class Player {
     }
 
     public boolean canGoToNextLevel(){
-        return xp >= level * 20;
+        return true;
     }
 
     public void goToNextLevel(){
         if(canGoToNextLevel()) {
             level++;
+            List<AbilityType> randomAbilities = GameController.get3RandomAbilities();
+            Game.getGameView().setAbilityOptions(randomAbilities);
         }
     }
 
@@ -230,6 +260,9 @@ public class Player {
 
     public float getSpeed() {
         return speed;
+    }
+    public int getLevel() {
+        return level;
     }
 
 }
