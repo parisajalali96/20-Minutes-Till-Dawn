@@ -35,13 +35,14 @@ com.badlogic.gdx.graphics.Color: {
 		b: 0.54509807
 		a: 1
 	}
-	red: {
-		r: 1
-		g: 0
-		b: 0
-		a: 1
-	}
-	stone: {
+	red:{
+      r: 1.0,
+      g: 0.6,
+      b: 0.7,
+      a: 1
+    },
+
+  stone: {
 		r: 0
 		g: 0.25882354
 		b: 0.2509804

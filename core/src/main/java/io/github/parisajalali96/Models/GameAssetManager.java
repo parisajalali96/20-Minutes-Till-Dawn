@@ -3,9 +3,12 @@ package io.github.parisajalali96.Models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GameAssetManager {
@@ -13,6 +16,15 @@ public class GameAssetManager {
     private Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
     private Music music;
     private boolean sfxEnabled;
+    {
+        Pixmap pixmap = new Pixmap(Gdx.files.internal("Images/Texture2D/T_CursorSprite.png"));
+        int hotspotX = 0;
+        int hotspotY = 0;
+        Cursor cursor = Gdx.graphics.newCursor(pixmap, hotspotX, hotspotY);
+        Gdx.graphics.setCursor(cursor);
+        pixmap.dispose();
+
+    }
 
     public float getMusicVolume() {
        // return music.getVolume();
@@ -65,5 +77,17 @@ public class GameAssetManager {
 
     public static TextureRegion getBulletTexture(){
         return new TextureRegion(new Texture("Images/Sprite/T_AmmoIcon.png"));
+    }
+
+    public static ShaderProgram getShader(){
+        String vertexShaderCode = Gdx.files.internal("shader.glsl").readString();
+        String fragmentShaderCode = Gdx.files.internal("gray.glsl").readString();
+
+        ShaderProgram grayscaleShader = new ShaderProgram(vertexShaderCode, fragmentShaderCode);
+
+        if (!grayscaleShader.isCompiled()) {
+            System.err.println("Shader compilation failed:\n" + grayscaleShader.getLog());
+        }
+        return grayscaleShader;
     }
 }

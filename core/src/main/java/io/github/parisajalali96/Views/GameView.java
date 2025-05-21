@@ -70,6 +70,10 @@ public class GameView implements Screen {
     private Label timeLabel;
     private Label surviveLabel;
 
+    //level progress bar
+    private ProgressBar levelBar;
+    private Label levelLabel;
+
     @Override
     public void show() {
         Game.setGameView(this);
@@ -102,6 +106,9 @@ public class GameView implements Screen {
             heartImages.add(new Image(new TextureRegion(t)));
         }
         initHealthBar();
+        levelLabel = new Label("Level " + Game.getCurrentPlayer().getLevel(), skin, "subtitle");
+        levelLabel.setAlignment(Align.center);
+        defaultsStage.addActor(levelLabel);
 
     }
 
@@ -142,6 +149,7 @@ public class GameView implements Screen {
 
         healthBar.pack();
         healthBar.setPosition(10, Gdx.graphics.getHeight() - healthBar.getHeight() - 10);
+        createLevelProgressBar();
     }
 
 
@@ -220,6 +228,21 @@ public class GameView implements Screen {
             cheatCodeStage.act(Gdx.graphics.getDeltaTime());
             cheatCodeStage.draw();
         }
+
+
+        float barX = levelBar.getX();
+        float barY = levelBar.getY();
+        float barWidth = levelBar.getWidth();
+        float barHeight = levelBar.getHeight();
+
+        levelLabel.setSize(barWidth, barHeight);
+        levelLabel.setPosition(barX, barY);
+
+        int currentExp = Game.getCurrentPlayer().getXp();
+        int neededExp = Game.getCurrentPlayer().getLevel()*20 - Game.getCurrentPlayer().getXp();
+        float progress = (float) currentExp / (float) neededExp;
+        levelBar.setValue(progress);
+
 
         defaultsStage.act(delta);
         defaultsStage.draw();
@@ -457,8 +480,20 @@ public class GameView implements Screen {
         killsLabel.setText("Kills: " + Game.getCurrentPlayer().getKills());
     }
 
+    //level progress bar
+    public void createLevelProgressBar() {
 
+        levelBar = new ProgressBar(0f, 1f, 0.01f, false, skin, "default-horizontal");
+        float width = Gdx.graphics.getWidth() * 0.5f;
+        float height = 50;
+        float x = (Gdx.graphics.getWidth() - width) / 2f;
+        float y = Gdx.graphics.getHeight() - height - 10;
 
+        levelBar.setSize(width, height);
+        levelBar.setPosition(x, y);
+        defaultsStage.addActor(levelBar);
+
+    }
     @Override
     public void resize(int width, int height) {
     }
