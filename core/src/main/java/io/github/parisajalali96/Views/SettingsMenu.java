@@ -31,6 +31,8 @@ public class SettingsMenu implements Screen {
     private final TextButton exitButton;
     private final SettingsMenuController controller;
 
+    //change game control buttons
+
 
     public SettingsMenu(SettingsMenuController controller, Skin skin) {
         this.controller = controller;

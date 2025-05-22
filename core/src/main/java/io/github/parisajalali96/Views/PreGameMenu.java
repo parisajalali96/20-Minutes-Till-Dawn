@@ -95,15 +95,37 @@ public class PreGameMenu implements Screen{
         stage.addActor(chosenHeroImage);
 
         createWeaponInfoWindow(Game.getCurrentPlayer().getWeapon().getType().getTexture());
+        heroInfoWindow.setVisible(false);
+        weaponInfoWindow.setVisible(false);
         createWeaponGrid();
         createGameDurationSelector();
 
+        // Add buttons to the stage
         stage.addActor(startGameButton);
+        stage.addActor(backButton);
+
+        startGameButton.setPosition(10, 10);
+
+        backButton.setPosition(
+            stage.getWidth() - backButton.getWidth() - 10,
+            10
+        );
+
         startGameButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 startGame();
             }
         });
+
+        backButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                Main.getMain().setScreen(new MainMenu(
+                    new MainMenuController(),
+                    GameAssetManager.getGameAssetManager().getSkin()
+                ));
+            }
+        });
+
     }
 
     private void createHeroGrid() {
@@ -219,9 +241,8 @@ public class PreGameMenu implements Screen{
         weaponInfoWindow.setSize(500, 500);
         weaponInfoWindow.setVisible(true);
         weaponInfoWindow.setPosition(
-            (Gdx.graphics.getWidth() - weaponInfoWindow.getWidth()) / 2f - 50,
-            (Gdx.graphics.getHeight() - weaponInfoWindow.getHeight()) / 2f
-        );
+            (Gdx.graphics.getWidth() - weaponInfoWindow.getWidth()) / 2f,
+            ((Gdx.graphics.getHeight() - weaponInfoWindow.getHeight()) / 2f) - 100);
 
         stage.addActor(weaponInfoWindow);
     }
