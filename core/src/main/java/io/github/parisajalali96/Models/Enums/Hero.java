@@ -72,4 +72,7 @@ public enum Hero {
     public int getSpeed() {
         return speed;
     }
+    public String getDescription(){
+        return name() + "\n" + "HP: " + getHP() + "\n" + "Speed: " + getSpeed();
+    }
 }

@@ -1,11 +1,11 @@
 package io.github.parisajalali96.Controllers;
 
+import io.github.parisajalali96.Models.Enums.GameTime;
 import io.github.parisajalali96.Models.Enums.Hero;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.Result;
 import io.github.parisajalali96.Models.Weapon;
-import models.Enums.GameTime;
 
 public class PreGameMenuController {
 

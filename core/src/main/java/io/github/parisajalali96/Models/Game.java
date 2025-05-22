@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import io.github.parisajalali96.Controllers.GameController;
+import io.github.parisajalali96.Models.Enums.GameTime;
 import io.github.parisajalali96.Views.GameView;
-import models.Enums.GameTime;
 import models.Enums.Menu;
 
 import java.io.IOException;

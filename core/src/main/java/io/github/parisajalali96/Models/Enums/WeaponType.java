@@ -56,4 +56,8 @@ public enum WeaponType {
     public int getAmmoMax() {
         return ammoMax;
     }
+    public String getDescription(){
+        return name + "\n" + "Damage: " + damage + "\n" + "Projectile: "
+            + projectile + "\n" + "Reload Time: " + timeReload + "\n" + "Max Ammo: " + ammoMax;
+    }
 }
