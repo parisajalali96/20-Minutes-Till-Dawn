@@ -96,7 +96,56 @@ public class ForgotPassView implements Screen {
                 else {
                     try {
                         Result result = controller.forgotPassword(username, answer);
-                        showResult(result);
+                        if (!result.isSuccess())showResult(result);
+                        else {
+                            Dialog passwordDialog = new Dialog("Change Password", skin);
+                            Table passwordTable = passwordDialog.getContentTable();
+
+                            Label changePass = new Label("Enter your new password:", skin);
+                            TextField newPasswordField = new TextField("", skin);
+                            newPasswordField.setMessageText("New Password");
+                            newPasswordField.setPasswordMode(true);
+                            newPasswordField.setPasswordCharacter('*');
+                            newPasswordField.setWidth(500);
+
+                            passwordTable.add(changePass).padBottom(10).row();
+                            passwordTable.add(newPasswordField).width(250).padBottom(20).row();
+
+                            TextButton confirmButton = new TextButton("Confirm", skin);
+                            TextButton cancelButton = new TextButton("Cancel", skin);
+
+                            Table buttonTable = passwordDialog.getButtonTable();
+                            buttonTable.add(confirmButton).pad(10);
+                            buttonTable.add(cancelButton).pad(10);
+
+                            confirmButton.addListener(new ChangeListener() {
+                                @Override
+                                public void changed(ChangeEvent event, Actor actor) {
+                                    String newPassword = newPasswordField.getText();
+                                    if (newPassword.isEmpty()) {
+                                        showResult(new Result(false, "Password cannot be empty."));
+                                    } else {
+                                        try {
+                                            Result changeResult = controller.changePassword(newPassword, username);
+                                            showResult(changeResult);
+                                            passwordDialog.hide();
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                }
+                            });
+
+                            cancelButton.addListener(new ChangeListener() {
+                                @Override
+                                public void changed(ChangeEvent event, Actor actor) {
+                                    passwordDialog.hide();
+                                }
+                            });
+
+                            passwordDialog.show(stage);
+                        }
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

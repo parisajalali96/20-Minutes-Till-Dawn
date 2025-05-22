@@ -19,12 +19,25 @@ public class ForgotPassController {
         User user = UserStorage.findUserByUsername(username);
         if(user == null) return new Result(false, "User not found!");
         else if(!user.getSA().equals(SA)) return new Result(false, "Wrong answer!");
-        else return new Result(true, "Your password is : " + user.getPassword());
+        else return new Result(true, "You can change your password!");
     }
 
     //get security question
     public String getQuestion(String username) throws IOException {
         User user = UserStorage.findUserByUsername(username);
         return user.getSQ();
+    }
+
+    //change pass controller
+    public Result changePassword(String newPass, String username) throws IOException {
+        User user = UserStorage.findUserByUsername(username);
+        String passwordRegex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%&*)(_]).{8,}$";
+        assert user != null;
+        if(user.getPassword().equals(newPass))
+            return new Result(true, "New password must be different!");
+        else if(!newPass.matches(passwordRegex))
+            return new Result(false, "New password is too weak!");
+        user.setPassword(newPass);
+        return new Result(true, "Password changed successfully!");
     }
 }
