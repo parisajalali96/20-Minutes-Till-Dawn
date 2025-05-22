@@ -1,6 +1,7 @@
 package io.github.parisajalali96.Views;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -20,7 +21,9 @@ import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Enums.Hero;
 import io.github.parisajalali96.Models.Enums.WeaponType;
+import io.github.parisajalali96.Models.KeyControl;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 
@@ -33,6 +36,7 @@ public class HintMenu implements Screen {
     private final Label weaponInfoLabel;
     private final Label abilityInfoLabel;
     private final Label cheatCodesInfoLabel;
+    private final Label gameControlInfoLabel;
     private final HintMenuController controller;
     private final TextButton windowCloseButton;
 
@@ -49,6 +53,7 @@ public class HintMenu implements Screen {
         abilityInfoLabel = new Label("Abilities", skin, "title");
         cheatCodesInfoLabel = new Label("Cheat Codes", skin, "title");
         windowCloseButton = new TextButton("Close", skin);
+        gameControlInfoLabel = new Label("Game Controls", skin, "title");
 
         controller.setView(this);
     }
@@ -63,11 +68,12 @@ public class HintMenu implements Screen {
         stage.addActor(table);
 
         Table buttonTable = new Table();
-        buttonTable.add(heroInfoLabel).pad(10).row();
-        buttonTable.add(weaponInfoLabel).pad(10).row();
-        buttonTable.add(abilityInfoLabel).pad(10).row();
-        buttonTable.add(cheatCodesInfoLabel).pad(10).row();
-        buttonTable.add(exitButton).pad(10);
+        buttonTable.add(heroInfoLabel).pad(5).row();
+        buttonTable.add(weaponInfoLabel).pad(5).row();
+        buttonTable.add(abilityInfoLabel).pad(5).row();
+        buttonTable.add(cheatCodesInfoLabel).pad(5).row();
+        buttonTable.add(gameControlInfoLabel).padTop(5).row();
+        buttonTable.add(exitButton);
 
         scrollContent = new Table();
         scrollContent.top().left();
@@ -75,7 +81,6 @@ public class HintMenu implements Screen {
 
         scrollPane = new ScrollPane(scrollContent, skin);
         scrollPane.setScrollingDisabled(false, true);
-        scrollPane.setForceScroll(true, false);
 
 
         table.add(buttonTable).top().padTop(20).row();
@@ -114,6 +119,7 @@ public class HintMenu implements Screen {
 
         heroInfoLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                scrollPane.setScrollingDisabled(false, true);
                 infoWindow.setVisible(true);
                 setHeroInfo();
             }
@@ -130,6 +136,7 @@ public class HintMenu implements Screen {
 
         weaponInfoLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                scrollPane.setScrollingDisabled(false, true);
                 infoWindow.setVisible(true);
                 setWeaponInfo();
             }
@@ -146,6 +153,7 @@ public class HintMenu implements Screen {
 
         abilityInfoLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                scrollPane.setScrollingDisabled(false, true);
                 infoWindow.setVisible(true);
                 setAbilityInfo();
             }
@@ -162,6 +170,7 @@ public class HintMenu implements Screen {
 
         cheatCodesInfoLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                scrollPane.setScrollingDisabled(false, true);
                 infoWindow.setVisible(true);
                 setCheatCodesInfo();
             }
@@ -176,7 +185,42 @@ public class HintMenu implements Screen {
             }
         });
 
+        gameControlInfoLabel.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                scrollPane.setScrollingDisabled(true, false);
+                infoWindow.setVisible(true);
+                setGameControlInfo();
+            }
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                gameControlInfoLabel.setColor(1f, 0.2f, 0.6f, 1f);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                gameControlInfoLabel.setColor(Color.WHITE);
+            }
+        });
+
     }
+
+
+    private void setGameControlInfo() {
+        scrollContent.clear();
+        scrollContent.center();
+
+        for (Map.Entry<String, Integer> entry : KeyControl.getKeyControl().entrySet()) {
+            Label keyLabel = new Label(entry.getKey(), skin, "subtitle");
+            String keyName = Input.Keys.toString(entry.getValue());
+            Label valueLabel = new Label(keyName, skin);
+
+            scrollContent.add(keyLabel).padRight(20);
+            scrollContent.add(valueLabel);
+            scrollContent.row();
+        }
+    }
+
+
 
     private void setCheatCodesInfo() {
         scrollContent.clear();
