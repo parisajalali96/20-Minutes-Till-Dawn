@@ -32,6 +32,7 @@ public class SettingsMenu implements Screen {
     private final Slider volumeSlider;
     private final Label volumeValueLabel;
     private final CheckBox sfxCheckBox;
+    private final CheckBox autoReloadCheckBox;
     private final Label musicLabel;
     private final SelectBox<String> musicSelector;
     private Table table;
@@ -55,6 +56,7 @@ public class SettingsMenu implements Screen {
         volumeValueLabel = new Label("", skin);
         musicLabel = new Label("Background Music:", skin);
         sfxCheckBox = new CheckBox("Enable SFX", skin);
+        autoReloadCheckBox = new CheckBox("Enable Auto Reload", skin);
         musicSelector = new SelectBox<>(skin);
         exitButton = new TextButton("Exit", skin);
         changeGameControlls = new TextButton("Game Controls", skin);
@@ -69,6 +71,7 @@ public class SettingsMenu implements Screen {
         volumeSlider.setValue(GameAssetManager.getGameAssetManager().getMusicVolume());
         volumeValueLabel.setText(String.format("%.0f%%", volumeSlider.getValue() * 100));
         sfxCheckBox.setChecked(GameAssetManager.getGameAssetManager().isSfxEnabled());
+        autoReloadCheckBox.setChecked(Game.isAutoReloadActive());
         musicSelector.setItems("Music 1", "Music 2", "Music 3");
         musicSelector.setSelected(GameAssetManager.getGameAssetManager().getMusic());
 
@@ -85,6 +88,14 @@ public class SettingsMenu implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 GameAssetManager.getGameAssetManager().setSfxEnabled(sfxCheckBox.isChecked());
+            }
+        });
+
+        autoReloadCheckBox.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Game.setAutoReloadActive(autoReloadCheckBox.isChecked());
             }
         });
 
@@ -121,6 +132,8 @@ public class SettingsMenu implements Screen {
         table.add(volumeValueLabel).width(50);
         table.row();
         table.add(sfxCheckBox).colspan(3).left();
+        table.row();
+        table.add(autoReloadCheckBox).colspan(3).left();
         table.row();
         table.add(musicLabel).left();
         table.add(musicSelector).colspan(2).left();

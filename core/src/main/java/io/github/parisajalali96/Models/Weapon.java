@@ -53,7 +53,13 @@ public class Weapon {
     public void shoot(Vector2 startPosition, Vector2 direction) {
         //only shoot if weapon has enough ammo
         for(int i = 0; i < type.getProjectile(); i ++) {
-            if (reloading || currentNumOfProjectiles <= 0) return;
+            if (reloading) return;
+            if(currentNumOfProjectiles <= 0) {
+                if(Game.isAutoReloadActive()) {
+                    reload();
+                }
+                return;
+            }
             currentNumOfProjectiles--;
             projectiles.add(new Projectile(type.getDamage(), startPosition, direction, bulletTexture));
         }

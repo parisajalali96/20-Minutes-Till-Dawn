@@ -63,6 +63,15 @@ public class Game {
     public static void addSecondsPassed(float seconds) {
         secondsPassed += seconds;
     }
+    public static boolean autoReloadActive = false;
+
+    public static void setAutoReloadActive(boolean autoReloadActive) {
+        Game.autoReloadActive = autoReloadActive;
+    }
+
+    public static boolean isAutoReloadActive() {
+        return autoReloadActive;
+    }
 
     public static void update(float delta) {
         //addSecondsPassed(delta);
