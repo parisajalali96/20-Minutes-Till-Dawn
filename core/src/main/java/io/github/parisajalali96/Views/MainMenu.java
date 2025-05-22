@@ -17,7 +17,6 @@ import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Player;
-import sun.tools.jconsole.Tab;
 
 import java.io.IOException;
 
@@ -133,7 +132,7 @@ public class MainMenu implements Screen {
 
     @Override
     public void render(float v) {
-        ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(0.125f, 0.102f, 0.141f, 1f);
         Main.getBatch().begin();
         Main.getBatch().end();
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));

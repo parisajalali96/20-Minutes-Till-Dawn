@@ -125,7 +125,7 @@ public class ScoreBoardMenu implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(0.125f, 0.102f, 0.141f, 1f);
         Main.getBatch().begin();
         Main.getBatch().end();
 
