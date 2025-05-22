@@ -1,12 +1,15 @@
 package io.github.parisajalali96.Views;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.parisajalali96.Controllers.MainMenuController;
@@ -14,7 +17,11 @@ import io.github.parisajalali96.Controllers.SettingsMenuController;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
+import io.github.parisajalali96.Models.KeyControl;
 import io.github.parisajalali96.Models.Player;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SettingsMenu implements Screen {
     private Stage stage;
@@ -29,9 +36,14 @@ public class SettingsMenu implements Screen {
     private final SelectBox<String> musicSelector;
     private Table table;
     private final TextButton exitButton;
+    private final TextButton changeGameControlls;
     private final SettingsMenuController controller;
 
     //change game control buttons
+    private Window gameControlChangeWindow;
+    private ScrollPane gameControlChangeScrollPane;
+    private Map<String, TextField> keyFields = new LinkedHashMap<>();
+
 
 
     public SettingsMenu(SettingsMenuController controller, Skin skin) {
@@ -45,6 +57,7 @@ public class SettingsMenu implements Screen {
         sfxCheckBox = new CheckBox("Enable SFX", skin);
         musicSelector = new SelectBox<>(skin);
         exitButton = new TextButton("Exit", skin);
+        changeGameControlls = new TextButton("Game Controls", skin);
         controller.setView(this);
     }
 
@@ -89,6 +102,13 @@ public class SettingsMenu implements Screen {
                     GameAssetManager.getGameAssetManager().getSkin()));
             }
         });
+        changeGameControlls.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                createGameControlChangeWindow();
+            }
+        });
 
         table = new Table();
         table.defaults().pad(10);
@@ -106,6 +126,9 @@ public class SettingsMenu implements Screen {
         table.add(musicSelector).colspan(2).left();
         table.row();
         table.add(exitButton).colspan(3).center().padTop(20);
+        table.row();
+        table.add(changeGameControlls).colspan(3).center().padTop(20);
+
 
         Table root = new Table();
         root.setFillParent(true);
@@ -125,6 +148,63 @@ public class SettingsMenu implements Screen {
         stage.draw();
     }
 
+    private void createGameControlChangeWindow() {
+        gameControlChangeWindow = new Window("Game Control Window", skin);
+        gameControlChangeWindow.setMovable(true);
+        gameControlChangeWindow.setResizable(true);
+        gameControlChangeWindow.setSize(500, 400);
+        gameControlChangeWindow.center();
+
+        Table keyTable = new Table();
+        keyTable.top().left();
+
+        keyFields.clear();
+
+        for (Map.Entry<String, Integer> entry : KeyControl.getKeyControl().entrySet()) {
+            Label keyName = new Label(entry.getKey(), skin);
+            String keyCharacter = Input.Keys.toString(entry.getValue());
+            TextField keyValue = new TextField(keyCharacter, skin);
+            keyFields.put(entry.getKey(), keyValue);
+            keyTable.add(keyName).left().pad(5);
+            keyTable.add(keyValue).width(100).pad(5).row();
+        }
+
+        gameControlChangeScrollPane = new ScrollPane(keyTable, skin);
+        gameControlChangeScrollPane.setFadeScrollBars(false);
+        gameControlChangeScrollPane.setScrollingDisabled(true, false);
+
+        gameControlChangeWindow.add(gameControlChangeScrollPane).expand().fill().row();
+
+        TextButton closeButton = new TextButton("Close", skin);
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                for (Map.Entry<String, TextField> entry : keyFields.entrySet()) {
+                    String action = entry.getKey();
+                    String newKeyString = entry.getValue().getText().trim();
+
+                    try {
+                        changeKeyControl(action, newKeyString);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid key for " + action + ": " + newKeyString);
+                    }
+                }
+                gameControlChangeWindow.remove();
+            }
+        });
+
+        gameControlChangeWindow.add(closeButton).padTop(10).center().row();
+        gameControlChangeWindow.setSize(600, 600);
+        float x = (Gdx.graphics.getWidth() - gameControlChangeWindow.getWidth()) / 2f;
+        float y = (Gdx.graphics.getHeight() - gameControlChangeWindow.getHeight()) / 2f;
+        gameControlChangeWindow.setPosition(x, y);
+        stage.addActor(gameControlChangeWindow);
+    }
+
+
+    private void changeKeyControl(String selectedKey, String newKey) {
+        KeyControl.changeKey(selectedKey, newKey);
+    }
     @Override
     public void resize(int width, int height) {
 
