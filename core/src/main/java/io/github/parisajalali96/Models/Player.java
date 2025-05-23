@@ -3,6 +3,7 @@ package io.github.parisajalali96.Models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -56,6 +57,14 @@ public class Player implements Serializable {
     private float abilityTimer = 0f;
     private float abilityTimeLine = 10f;
 
+    //level upgrade
+    private transient Animation<TextureRegion> levelUpAnimation;
+    private float levelUpTimer = 0f;
+    private float levelUpTimeLine = 10f;
+    private boolean levelUpAnimationActive = false;
+    private Vector2 levelUpPosition = new Vector2();
+
+
 
     public Player(User user) {
         this.user = user;
@@ -66,14 +75,31 @@ public class Player implements Serializable {
         TextureRegion[] walkFrames = hero.getWalkingFrames();
         walkAnimation = new Animation<>(0.1f, walkFrames);
         idleFrame = walkFrames[0];
+        List<String> levelUpPaths = Hero.getLevelUpgardeAnimation();
+        TextureRegion[] levelUpRegions = new TextureRegion[levelUpPaths.size()];
+
+        for (int i = 0; i < levelUpPaths.size(); i++) {
+            Texture frameTexture = new Texture(levelUpPaths.get(i));
+            levelUpRegions[i] = new TextureRegion(frameTexture);
+        }
+        levelUpAnimation = new Animation<>(0.25f, levelUpRegions);
     }
 
     public void initPLayer(){
         TextureRegion[] walkFrames = hero.getWalkingFrames();
         walkAnimation = new Animation<>(0.1f, walkFrames);
         idleFrame = walkFrames[0];
+        List<String> levelUpPaths = Hero.getLevelUpgardeAnimation();
+        TextureRegion[] levelUpRegions = new TextureRegion[levelUpPaths.size()];
+
+        for (int i = 0; i < levelUpPaths.size(); i++) {
+            Texture frameTexture = new Texture(levelUpPaths.get(i));
+            levelUpRegions[i] = new TextureRegion(frameTexture);
+        }
+        levelUpAnimation = new Animation<>(0.25f, levelUpRegions);
         weapon.initWeapon();
     }
+
     public void setRandomHero() {
         Random rand = new Random();
         hero = Hero.values()[rand.nextInt(Hero.values().length)];
@@ -132,6 +158,22 @@ public class Player implements Serializable {
     }
 
     public void update(float delta, OrthographicCamera camera) {
+
+        if (levelUpAnimationActive) {
+            levelUpTimer += delta;
+
+            weapon.update(delta);
+            if (levelUpAnimation.isAnimationFinished(levelUpTimer)) {
+                levelUpAnimationActive = false;
+                levelUpTimer = 0f;
+
+                List<AbilityType> randomAbilities = GameController.get3RandomAbilities();
+                Game.getGameView().setAbilityOptions(randomAbilities);
+            }
+
+            return;
+        }
+
 
         //timer on abilities
         if(currentAbility != null) {
@@ -192,7 +234,15 @@ public class Player implements Serializable {
         weapon.update(delta);
     }
 
+
+
     public void draw(SpriteBatch batch) {
+        if (levelUpAnimationActive) {
+            TextureRegion levelUpFrame = levelUpAnimation.getKeyFrame(levelUpTimer, true);
+            float offsetX = -30f;
+            batch.draw(levelUpFrame, levelUpPosition.x + offsetX, levelUpPosition.y);
+        }
+
         TextureRegion currentFrame = isMoving
             ? walkAnimation.getKeyFrame(stateTime, true)
             : idleFrame;
@@ -202,9 +252,10 @@ public class Player implements Serializable {
         }
 
         batch.draw(currentFrame, position.x, position.y);
-
         weapon.draw(batch, position, facingRight);
     }
+
+
 
 
     public void dispose() {
@@ -263,8 +314,9 @@ public class Player implements Serializable {
     public void goToNextLevel(){
         if(canGoToNextLevel()) {
             level++;
-            List<AbilityType> randomAbilities = GameController.get3RandomAbilities();
-            Game.getGameView().setAbilityOptions(randomAbilities);
+            levelUpAnimationActive = true;
+            levelUpPosition.set(position);
+
         }
     }
 

@@ -25,9 +25,9 @@ public class Projectile {
         if (!active) return;
         position.mulAdd(velocity, delta);
 
-        if (position.x < 0 || position.x > Gdx.graphics.getWidth() || position.y < 0 || position.y > Gdx.graphics.getHeight()) {
-            active = false;
-        }
+//        if (position.x < 0 || position.x > Gdx.graphics.getWidth() || position.y < 0 || position.y > Gdx.graphics.getHeight()) {
+//            active = false;
+//        }
     }
 
     public void draw(SpriteBatch batch) {

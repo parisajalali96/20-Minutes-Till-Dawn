@@ -24,7 +24,7 @@ public enum EnemyType {
         @Override
         public int getSpawnCount(float secondsPassed) {
             float time = (int)(secondsPassed / 10f) * 10f;
-            return Math.max(0, (int)(time - Game.getTime().getTotalSeconds() + 30) / 50);
+            return Math.max(0, (int)(2*time - Game.getTime().getTotalSeconds() + 30) / 50);
         }
 
     },
@@ -34,8 +34,7 @@ public enum EnemyType {
 
             @Override
             public int getSpawnCount(float secondsPassed) {
-                //fix game time
-                if (!hasSpawned && secondsPassed >= 60f) {
+                if (!hasSpawned && secondsPassed >= Game.getTime().getTotalSeconds()/2) {
                     hasSpawned = true;
                     return 1;
                 }

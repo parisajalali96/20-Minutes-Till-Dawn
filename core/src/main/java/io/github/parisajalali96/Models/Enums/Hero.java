@@ -24,6 +24,8 @@ public enum Hero {
     private Texture movementTexture;
     private final int HP;
     private final int speed;
+    private static final List<String> levelUpgardeAnimation = List.of("Images/Sprite/T_LevelUpFX_0.png", "Images/Sprite/T_LevelUpFX_1.png","Images/Sprite/T_LevelUpFX_2.png", "Images/Sprite/T_LevelUpFX_3.png",
+        "Images/Sprite/T_LevelUpFX_4.png", "Images/Sprite/T_LevelUpFX_5.png", "Images/Sprite/T_LevelUpFX_6.png","Images/Sprite/T_LevelUpFX_7.png", "Images/Sprite/T_LevelUpFX_8.png");
 
     Hero(String portraitTexturePath, String movementTexturePath, int frameWidth, int frameHeight, int[][] animationRowsAndCounts, int HP, int speed) {
         this.portraitTexturePath = portraitTexturePath;
@@ -76,5 +78,9 @@ public enum Hero {
     }
     public String getDescription(){
         return name() + "\n" + "HP: " + getHP() + "\n" + "Speed: " + getSpeed();
+    }
+
+    public static List<String> getLevelUpgardeAnimation() {
+        return levelUpgardeAnimation;
     }
 }

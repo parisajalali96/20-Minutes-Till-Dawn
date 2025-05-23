@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -37,6 +38,7 @@ public class GameMap implements Serializable {
     float visibilityRadius = 200f;
 
     public GameMap() {
+        Game.setMap(this);
         initTiles();
     }
 
@@ -198,38 +200,52 @@ public class GameMap implements Serializable {
     }
 
     public Vector2 getRandomSpawnPosition() {
+        Vector2 playerPos = Game.getCurrentPlayer().getPosition();
+
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
+
+
         float margin = 10f;
+
+        float leftX = playerPos.x - screenWidth / 2f + margin;
+        float rightX = playerPos.x + screenWidth / 2f - margin;
+        float bottomY = playerPos.y - screenHeight / 2f + margin;
+        float topY = playerPos.y + screenHeight / 2f - margin;
 
         int edge = (int) (Math.random() * 4);
         float x, y;
 
         switch (edge) {
-            case 0:
-                x = (float) Math.random() * screenWidth;
-                y = screenHeight - margin;
+            case 0: // top edge
+                x = leftX + (float) Math.random() * (rightX - leftX);
+                y = topY;
                 break;
-            case 1:
-                x = (float) Math.random() * screenWidth;
-                y = margin;
+            case 1: // bottom edge
+                x = leftX + (float) Math.random() * (rightX - leftX);
+                y = bottomY;
                 break;
-            case 2:
-                x = margin;
-                y = (float) Math.random() * screenHeight;
+            case 2: // left edge
+                x = leftX;
+                y = bottomY + (float) Math.random() * (topY - bottomY);
                 break;
-            case 3:
-                x = screenWidth - margin;
-                y = (float) Math.random() * screenHeight;
+            case 3: // right edge
+                x = rightX;
+                y = bottomY + (float) Math.random() * (topY - bottomY);
                 break;
             default:
-                x = screenWidth / 2;
-                y = screenHeight / 2;
+                x = playerPos.x;
+                y = playerPos.y;
                 break;
         }
 
+        x = MathUtils.clamp(x, 0, MAP_WIDTH * TILE_SIZE);
+        y = MathUtils.clamp(y, 0, MAP_HEIGHT * TILE_SIZE);
+
         return new Vector2(x, y);
     }
+
+
 
     public void dispose() {
     }
