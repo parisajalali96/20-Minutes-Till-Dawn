@@ -77,6 +77,7 @@ public class GameView implements Screen {
 
     @Override
     public void show() {
+        GameAssetManager.playNextTrack();
         Game.setGameView(this);
         skin = GameAssetManager.getGameAssetManager().getSkin();
         abilityStage = new Stage();
@@ -345,6 +346,8 @@ public class GameView implements Screen {
 
         //status label
         String statusText = win ? "YOU WIN!" : "YOU LOSE!";
+        if(win) GameAssetManager.playSfx("youWin");
+        else GameAssetManager.playSfx("youLose");
         Label statusLabel = new Label(statusText, skin, "title");
         statusLabel.setAlignment(Align.center);
         window.add(statusLabel).colspan(2).padBottom(20).row();

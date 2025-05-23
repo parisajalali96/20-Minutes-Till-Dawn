@@ -124,6 +124,7 @@ public class GameMap implements Serializable {
                     bulletIter.remove();
 
                     if (!enemy.isAlive()) {
+                        if(enemy.getType() == EnemyType.Eyebat) GameAssetManager.playSfx("batDeath");
                         Game.getCurrentPlayer().addKill();
                         drops.add(new XpDrop(new Vector2(enemy.getPosition().x, enemy.getPosition().y)));
                         enemyIter.remove();
@@ -137,6 +138,7 @@ public class GameMap implements Serializable {
         while (xpIter.hasNext()) {
             XpDrop dot = xpIter.next();
             if (dot.isPickedUpBy(player)) {
+                GameAssetManager.playSfx("xpDrop");
                 dot.addXp();
                 xpIter.remove();
             }
@@ -158,6 +160,7 @@ public class GameMap implements Serializable {
         while(enemyIterator.hasNext()) {
             Enemy enemy = enemyIterator.next();
             if(enemy.getBounds().overlaps(Game.getCurrentPlayer().getBounds()) && enemy.canAttack()) {
+                GameAssetManager.playSfx("monsterAttack");
                 Game.getCurrentPlayer().addHealth(-1);
                 enemy.resetCanAttack();
             }
@@ -173,10 +176,6 @@ public class GameMap implements Serializable {
                 Tile tile = tiles[x][y];
                 if (tile != null) {
                     tile.render(batch);
-//                    Vector2 tilePos = tile.getPosition(); // tile's pixel position
-//                    if (tilePos.dst(playerPos) <= visibilityRadius) {
-//                        tile.render(batch);
-//                    }
                 }
             }
         }

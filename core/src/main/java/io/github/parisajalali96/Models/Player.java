@@ -314,6 +314,7 @@ public class Player implements Serializable {
     public void goToNextLevel(){
         if(canGoToNextLevel()) {
             level++;
+            GameAssetManager.playSfx("levelUpUpgrade");
             levelUpAnimationActive = true;
             levelUpPosition.set(position);
 

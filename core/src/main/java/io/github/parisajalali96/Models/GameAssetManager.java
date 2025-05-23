@@ -2,6 +2,7 @@ package io.github.parisajalali96.Models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -11,24 +12,40 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class GameAssetManager {
     private static GameAssetManager gameAssetManager;
     private Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
     private Music music;
-    private boolean sfxEnabled;
-    {
+    private static boolean sfxEnabled = true;
+    private static ArrayList<Music> playList = new ArrayList<>();
+    private static int currentMusicIndex = 0;
+    private static Map<String, Sound> sfxMap = new HashMap<>();
+
+    private GameAssetManager() {
         Pixmap pixmap = new Pixmap(Gdx.files.internal("Images/Texture2D/T_CursorSprite.png"));
-        int hotspotX = 0;
-        int hotspotY = 0;
+        int hotspotX = 0, hotspotY = 0;
         Cursor cursor = Gdx.graphics.newCursor(pixmap, hotspotX, hotspotY);
         Gdx.graphics.setCursor(cursor);
         pixmap.dispose();
 
-    }
+        playList.add(Gdx.audio.newMusic(Gdx.files.internal("AudioClip/Pretty Dungeon LOOP.wav")));
+        playList.add(Gdx.audio.newMusic(Gdx.files.internal("AudioClip/Wasteland Combat Loop.wav")));
 
-    public float getMusicVolume() {
-       // return music.getVolume();
-        return 10;
+        sfxMap.put("click", Gdx.audio.newSound(Gdx.files.internal("AudioClip/UI Click 36.wav")));
+        sfxMap.put("gunReload", Gdx.audio.newSound(Gdx.files.internal("AudioClip/Weapon_Shotgun_Reload.wav")));
+        sfxMap.put("youWin", Gdx.audio.newSound(Gdx.files.internal("AudioClip/You Win (2).wav")));
+        sfxMap.put("youLose", Gdx.audio.newSound(Gdx.files.internal("AudioClip/You Lose (4).wav")));
+        sfxMap.put("batDeath", Gdx.audio.newSound(Gdx.files.internal("AudioClip/Bat_Death_02.wav")));
+        sfxMap.put("monsterAttack", Gdx.audio.newSound(Gdx.files.internal("AudioClip/Monster_2_Attack_Quick_01_WITH_ECHO.wav")));
+        sfxMap.put("shot", Gdx.audio.newSound(Gdx.files.internal("AudioClip/single_shot.wav")));
+        sfxMap.put("levelUpUpgrade", Gdx.audio.newSound(Gdx.files.internal("AudioClip/Special & Powerup (10).wav")));
+        sfxMap.put("xpDrop", Gdx.audio.newSound(Gdx.files.internal("AudioClip/Crystal Reward Tick.wav")));
+
+        playNextTrack();
     }
 
     public void setMusicVolume(float volume) {
@@ -89,5 +106,36 @@ public class GameAssetManager {
             System.err.println("Shader compilation failed:\n" + grayscaleShader.getLog());
         }
         return grayscaleShader;
+    }
+
+    public static void playNextTrack() {
+        if (currentMusicIndex >= playList.size()) currentMusicIndex = 0;
+
+        Music currentMusic = playList.get(currentMusicIndex);
+        currentMusic.play();
+
+        currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                currentMusicIndex++;
+                playNextTrack();
+            }
+        });
+    }
+
+    public static void playSfx(String name) {
+        if (!sfxEnabled) return;
+
+        Sound sound = sfxMap.get(name);
+        if (sound != null) {
+            sound.play(1.0f);
+        } else {
+            Gdx.app.log("GameAssetManager", "SFX not found: " + name);
+        }
+    }
+
+
+    public float getMusicVolume() {
+        return 10;
     }
 }

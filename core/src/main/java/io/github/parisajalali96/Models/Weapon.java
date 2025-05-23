@@ -85,11 +85,13 @@ public class Weapon implements Serializable {
             }
             currentNumOfProjectiles--;
             projectiles.add(new Projectile(type.getDamage(), startPosition, direction, bulletTexture));
+            GameAssetManager.playSfx("shot");
         }
     }
 
     public void reload(){
         if(!reloading){
+            GameAssetManager.playSfx("gunReload");
             reloading = true;
             reloadTimer = 0f;
         }
