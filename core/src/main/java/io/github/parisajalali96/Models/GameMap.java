@@ -1,6 +1,9 @@
 package io.github.parisajalali96.Models;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -36,11 +39,14 @@ public class GameMap implements Serializable {
     private boolean treesSpawned = false;
 
     // fog of war effect
-    float visibilityRadius = 200f;
+    private Texture fogGradientTexture;
+
 
     public GameMap() {
         Game.setMap(this);
         initTiles();
+        fogGradientTexture = createFogOfWarTexture();
+
     }
 
     private void initTiles() {
@@ -208,6 +214,24 @@ public class GameMap implements Serializable {
             p.draw(batch);
         }
 
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        //batch.begin();
+        float fogWidth = fogGradientTexture.getWidth();
+        float fogHeight = fogGradientTexture.getHeight();
+
+        batch.setColor(1, 1, 1, 1);
+
+        batch.draw(fogGradientTexture,
+            playerPos.x - fogWidth / 2f,
+            playerPos.y - fogHeight / 2f,
+            fogWidth,
+            fogHeight
+        );
+
+
+
 
     }
 
@@ -274,6 +298,43 @@ public class GameMap implements Serializable {
     public void addEnemyProjectile(Projectile p) {
         enemyProjectiles.add(p);
     }
+
+    private Texture createFogOfWarTexture() {
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.None);
+
+        float centerX = width / 2f;
+        float centerY = height / 2f;
+
+        float maxDist = (float) Math.sqrt(centerX * centerX + centerY * centerY);
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                float dx = x - centerX;
+                float dy = y - centerY;
+                float dist = (float) Math.sqrt(dx * dx + dy * dy);
+                float visibility = 0.5f;
+                float alpha = MathUtils.clamp(dist / (maxDist * visibility), 0f, 1f);
+                alpha = alpha * alpha;
+
+
+                pixmap.setColor(0f, 0f, 0f, alpha);
+                pixmap.drawPixel(x, y);
+            }
+        }
+
+        Texture texture = new Texture(pixmap);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        pixmap.dispose();
+        return texture;
+    }
+
+
+
+
 
 }
 

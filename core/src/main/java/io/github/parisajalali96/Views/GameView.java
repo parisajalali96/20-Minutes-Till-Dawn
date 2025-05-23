@@ -29,6 +29,7 @@ import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.*;
 import io.github.parisajalali96.Models.Enums.AbilityType;
 
+import java.io.IOException;
 import java.util.List;
 
 public class GameView implements Screen {

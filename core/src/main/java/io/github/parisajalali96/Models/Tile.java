@@ -29,6 +29,7 @@ public class Tile implements Serializable {
 
 
     public void render(SpriteBatch batch) {
+
         batch.draw(texture, x * TILE_SIZE, y * TILE_SIZE);
     }
 

@@ -16,13 +16,22 @@ public class Game {
 
 
     private static GameTime time = GameTime.TWO;
-    private static GameMap map = new GameMap();
+    private static GameMap map;
+
+    static {
+        map = new GameMap();
+    }
+
     private static Player currentPlayer;
     private static final ArrayList<Player> players = new ArrayList<>();
     private static Menu currentMenu;
     private static float secondsPassed = 0f;
     private static float countdown = time.getTotalSeconds();
-    private static GameView gameView = new GameView();
+    private static GameView gameView;
+
+    static {
+        gameView = new GameView();
+    }
 
     public static List<User> getRegisteredUsers() throws IOException {
         return UserStorage.loadUsers();

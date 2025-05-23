@@ -27,6 +27,8 @@ import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Weapon;
 
+import java.io.IOException;
+
 public class PreGameMenu implements Screen{
     private Stage stage;
     private Skin skin;
