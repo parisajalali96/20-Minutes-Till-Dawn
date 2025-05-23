@@ -1,5 +1,6 @@
 package io.github.parisajalali96.Controllers;
 
+import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameMap;
 import io.github.parisajalali96.Models.Player;
@@ -31,7 +32,7 @@ public class SaveGameManager {
                 name,
                 player.getKills(),
                 Game.getCountdownTime(),
-                player.getHero().getPortraitTexturePath()  // <-- might be null or invalid!
+                player.getHero().getPortraitTexturePath()
             );
 
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(dir, "info.dat")))) {
@@ -40,7 +41,7 @@ public class SaveGameManager {
 
             updateIndex(name);
         } catch (Exception e) {
-            e.printStackTrace();  // <-- check console output
+            e.printStackTrace();
         }
     }
 
@@ -79,5 +80,34 @@ public class SaveGameManager {
             return (GameMap) in.readObject();
         }
     }
+
+    public static void loadGame(String name) throws IOException, ClassNotFoundException {
+        File dir = new File(SAVE_FOLDER, name);
+        if (!dir.exists() || !dir.isDirectory()) {
+            throw new FileNotFoundException("Save folder not found: " + name);
+        }
+
+        Player loadedPlayer;
+        GameMap loadedMap;
+
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(dir, "player.dat")))) {
+            loadedPlayer = (Player) in.readObject();
+        }
+
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(dir, "map.dat")))) {
+            loadedMap = (GameMap) in.readObject();
+        }
+
+        GameInfoSaveManager info = GameInfoSaveManager.loadGameInfo(name);
+        Game.setCurrentPlayer(loadedPlayer);
+        loadedPlayer.initPLayer();
+        Game.setMap(loadedMap);
+        loadedMap.initMap();
+        Game.getGameView().setPaused(false);
+        Game.setCountdown(info.getSecondsLeft());
+        Main.getMain().setScreen(Game.getGameView());
+
+    }
+
 }
 

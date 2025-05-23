@@ -57,7 +57,6 @@ public class Player implements Serializable {
     private float abilityTimeLine = 10f;
 
 
-
     public Player(User user) {
         this.user = user;
         setRandomHero();
@@ -69,6 +68,12 @@ public class Player implements Serializable {
         idleFrame = walkFrames[0];
     }
 
+    public void initPLayer(){
+        TextureRegion[] walkFrames = hero.getWalkingFrames();
+        walkAnimation = new Animation<>(0.1f, walkFrames);
+        idleFrame = walkFrames[0];
+        weapon.initWeapon();
+    }
     public void setRandomHero() {
         Random rand = new Random();
         hero = Hero.values()[rand.nextInt(Hero.values().length)];

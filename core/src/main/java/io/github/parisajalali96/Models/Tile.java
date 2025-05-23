@@ -3,6 +3,7 @@ package io.github.parisajalali96.Models;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.github.parisajalali96.Models.Enums.TileTexture;
 
 import java.io.Serializable;
 
@@ -21,6 +22,11 @@ public class Tile implements Serializable {
         this.y = y;
         isOccupied = false;
     }
+
+    public void initTile(){
+        this.texture = new TextureRegion(TileTexture.NORMAL.getTexture());
+    }
+
 
     public void render(SpriteBatch batch) {
         batch.draw(texture, x * TILE_SIZE, y * TILE_SIZE);

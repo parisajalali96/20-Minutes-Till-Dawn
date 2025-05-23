@@ -107,6 +107,13 @@ public class Game {
         //TODO implement
     }
 
+    public static void setMap(GameMap map) {
+        Game.map = map;
+    }
+
+    public static void setCountdown(float countdown) {
+        Game.countdown = countdown;
+    }
 
 
 

@@ -45,4 +45,5 @@ public class GameInfoSaveManager implements Serializable {
             return (GameInfoSaveManager) in.readObject();
         }
     }
+
 }

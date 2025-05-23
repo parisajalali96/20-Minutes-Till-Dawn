@@ -28,10 +28,31 @@ public class Weapon implements Serializable {
     private float reloadAnimTimer = 0f;
     private boolean reloading = false;
     private float reloadTimer = 0f;
-    private final float reloadTime;
+    private float reloadTime;
 
 
     public Weapon(WeaponType type) {
+        this.type = type;
+        this.texture = type.getTexture();
+        this.bulletTexture = WeaponType.getBulletTexture();
+        currentNumOfProjectiles = type.getAmmoMax();
+        reloadTime = type.getTimeReload();
+
+        List<String> reloadAnimationPaths = type.getReloadStagesTextures();
+        TextureRegion[] reloadRegions = new TextureRegion[reloadAnimationPaths.size()];
+
+        for (int i = 0; i < reloadAnimationPaths.size(); i++) {
+            Texture frameTexture = new Texture(reloadAnimationPaths.get(i));
+            reloadRegions[i] = new TextureRegion(frameTexture);
+        }
+        reloadAnimation = new Animation<>(0.25f, reloadRegions);
+
+        damage = type.getDamage();
+        projectile = type.getProjectile();
+        ammo = type.getAmmoMax();
+    }
+
+    public void initWeapon(){
         this.type = type;
         this.texture = type.getTexture();
         this.bulletTexture = WeaponType.getBulletTexture();

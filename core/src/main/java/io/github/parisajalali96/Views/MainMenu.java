@@ -171,7 +171,11 @@ public class MainMenu implements Screen {
                     TextButton loadButton = new TextButton("Load", skin);
                     loadButton.addListener(new ClickListener() {
                         public void clicked(InputEvent event, float x, float y) {
-                            // loadFullGame(savedGame);
+                            try {
+                                SaveGameManager.loadGame(savedGame);
+                            } catch (IOException | ClassNotFoundException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     });
 

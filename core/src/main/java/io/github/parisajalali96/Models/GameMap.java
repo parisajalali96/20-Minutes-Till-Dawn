@@ -50,6 +50,14 @@ public class GameMap implements Serializable {
         }
     }
 
+    public void initMap(){
+        for (int x = 0; x < MAP_WIDTH; x++) {
+            for (int y = 0; y < MAP_HEIGHT; y++) {
+                tiles[x][y].initTile();
+            }
+        }
+    }
+
     public void spawnEnemy(EnemyType type, Vector2 position) {
         Animation<TextureRegion> idleAnimation = EnemySpawner.loadIdleAnimation(type);
         Animation<TextureRegion> spawnAnimation = EnemySpawner.loadSpawnAnimation(type);
