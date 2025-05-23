@@ -49,6 +49,7 @@ public class Player {
     private TextureRegion idleFrame;
 
     //abilities
+    private List<AbilityType> collectedAbilities = new ArrayList<>();
     private AbilityType currentAbility;
     private float abilityTimer = 0f;
     private float abilityTimeLine = 10f;
@@ -91,6 +92,9 @@ public class Player {
 
     public void addAbility(AbilityType ability) {
         currentAbility = ability;
+        if(!collectedAbilities.contains(ability)){
+            collectedAbilities.add(ability);
+        }
     }
 
     public User getUser() {
@@ -266,6 +270,10 @@ public class Player {
     }
     public int getLevel() {
         return level;
+    }
+
+    public List<AbilityType> getAbilities() {
+        return collectedAbilities;
     }
 
 

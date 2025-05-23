@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import io.github.parisajalali96.Controllers.GameController;
 import io.github.parisajalali96.Controllers.MainMenuController;
+import io.github.parisajalali96.Controllers.PauseMenuController;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Game;
@@ -183,6 +184,10 @@ public class GameView implements Screen {
             } else if(Gdx.input.isKeyJustPressed(KeyControl.cheatCodeMenu)) {
                 cheatCodeActive = true;
                 cheatCodeMenuPopUp();
+            } else if(Gdx.input.isKeyJustPressed(KeyControl.pauseGame)) {
+                isPaused = true;
+                Main.getMain().setScreen(new PauseMenu(new PauseMenuController(),
+                    GameAssetManager.getGameAssetManager().getSkin()));
             }
 
         }
@@ -495,6 +500,13 @@ public class GameView implements Screen {
         defaultsStage.addActor(levelBar);
 
     }
+    public void setPaused(boolean paused) {
+        isPaused = paused;
+    }
+    public boolean isPaused() {
+        return isPaused;
+    }
+
     @Override
     public void resize(int width, int height) {
     }

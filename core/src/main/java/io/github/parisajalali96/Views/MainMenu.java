@@ -138,6 +138,9 @@ public class MainMenu implements Screen {
                     GameAssetManager.getGameAssetManager().getSkin()));
                 break;
             }
+            case "Continue Saved Game": {
+                break;
+            }
         }
     }
 
