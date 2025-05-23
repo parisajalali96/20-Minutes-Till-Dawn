@@ -244,10 +244,18 @@ public class GameView implements Screen {
         levelLabel.setSize(barWidth, barHeight);
         levelLabel.setPosition(barX, barY);
 
-        int currentExp = Game.getCurrentPlayer().getXp();
-        int neededExp = Game.getCurrentPlayer().getLevel()*20 - Game.getCurrentPlayer().getXp();
-        float progress = (float) currentExp / (float) neededExp;
+        int currentXp = Game.getCurrentPlayer().getXp();
+        int level = Game.getCurrentPlayer().getLevel();
+        int xpForCurrentLevel = (level - 1) * 20;
+        int xpForNextLevel = level * 20;
+
+        int xpGainedInLevel = currentXp - xpForCurrentLevel;
+        int xpNeededForLevelUp = xpForNextLevel - xpForCurrentLevel;
+
+        float progress = (float) xpGainedInLevel / xpNeededForLevelUp;
         levelBar.setValue(progress);
+        levelLabel.setText("Level " + level);
+
 
 
         defaultsStage.act(delta);
