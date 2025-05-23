@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -24,11 +26,8 @@ import io.github.parisajalali96.Controllers.GameController;
 import io.github.parisajalali96.Controllers.MainMenuController;
 import io.github.parisajalali96.Controllers.PauseMenuController;
 import io.github.parisajalali96.Main;
+import io.github.parisajalali96.Models.*;
 import io.github.parisajalali96.Models.Enums.AbilityType;
-import io.github.parisajalali96.Models.Game;
-import io.github.parisajalali96.Models.GameAssetManager;
-import io.github.parisajalali96.Models.GameMap;
-import io.github.parisajalali96.Models.KeyControl;
 
 import java.util.List;
 
@@ -74,6 +73,10 @@ public class GameView implements Screen {
     //level progress bar
     private ProgressBar levelBar;
     private Label levelLabel;
+
+    //auto aim
+    private boolean isAutoAimActive = false;
+    private Enemy currentlyTargetedEnemy = null;
 
     @Override
     public void show() {
@@ -189,9 +192,14 @@ public class GameView implements Screen {
                 isPaused = true;
                 Main.getMain().setScreen(new PauseMenu(new PauseMenuController(),
                     GameAssetManager.getGameAssetManager().getSkin()));
+            } else if(Gdx.input.isKeyJustPressed(KeyControl.autoAim)) {
+                if(isAutoAimActive) isAutoAimActive = false;
+                else isAutoAimActive = true;
             }
 
         }
+
+        if(isAutoAimActive) autoAim();
 
 
         // Camera follows player
@@ -516,6 +524,37 @@ public class GameView implements Screen {
     }
     public boolean isPaused() {
         return isPaused;
+    }
+
+    public void autoAim() {
+        float maxSnapDistance = 150f;
+        Vector2 mouseScreenPos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        Vector3 mouseWorldPos3 = camera.unproject(new Vector3(mouseScreenPos.x, mouseScreenPos.y, 0));
+        Vector2 mouseWorldPos = new Vector2(mouseWorldPos3.x, mouseWorldPos3.y);
+
+        Enemy closestEnemy = null;
+        float closestDistance = maxSnapDistance;
+
+        for (Enemy enemy : Game.getMap().getEnemies()) {
+            Vector2 enemyPos = enemy.getPosition();
+            float dist = enemyPos.dst(mouseWorldPos);
+            if (dist < closestDistance) {
+                closestDistance = dist;
+                closestEnemy = enemy;
+            }
+        }
+
+        if (closestEnemy != null) {
+            if (currentlyTargetedEnemy == null || !currentlyTargetedEnemy.equals(closestEnemy)) {
+                currentlyTargetedEnemy = closestEnemy;
+
+                Vector2 enemyPos = currentlyTargetedEnemy.getPosition();
+                Vector3 enemyScreenPos3 = camera.project(new Vector3(enemyPos.x, enemyPos.y, 0));
+                Gdx.input.setCursorPosition((int) enemyScreenPos3.x, (int) enemyScreenPos3.y);
+            }
+        } else {
+            currentlyTargetedEnemy = null;
+        }
     }
 
     @Override

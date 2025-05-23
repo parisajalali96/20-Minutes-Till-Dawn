@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import io.github.parisajalali96.Models.Enums.EnemyState;
 import io.github.parisajalali96.Models.Enums.EnemyType;
 import io.github.parisajalali96.Models.Enums.TileTexture;
 import org.w3c.dom.Text;
@@ -110,6 +111,17 @@ public class GameMap implements Serializable {
         weapon.update(delta);
 
 
+        // removing dead enemies
+        Iterator<Enemy> enemyCleanupIter = enemies.iterator();
+        while (enemyCleanupIter.hasNext()) {
+            Enemy e = enemyCleanupIter.next();
+            if (e.isDead()) {
+                Game.getCurrentPlayer().addKill();
+                drops.add(new XpDrop(new Vector2(e.getPosition().x, e.getPosition().y)));
+                enemyCleanupIter.remove();
+            }
+        }
+
         // killing enemies
         Iterator<Projectile> bulletIter = weapon.getProjectiles().iterator();
         while (bulletIter.hasNext()) {
@@ -123,15 +135,16 @@ public class GameMap implements Serializable {
                     enemy.addHealth(-bullet.getDamage());
                     bulletIter.remove();
 
-                    if (!enemy.isAlive()) {
-                        if(enemy.getType() == EnemyType.Eyebat) GameAssetManager.playSfx("batDeath");
-                        Game.getCurrentPlayer().addKill();
-                        drops.add(new XpDrop(new Vector2(enemy.getPosition().x, enemy.getPosition().y)));
-                        enemyIter.remove();
+                    if (enemy.getHealth() <= 0 && enemy.getState() == EnemyState.ALIVE) {
+                        enemy.die();
+                        if (enemy.getType() == EnemyType.Eyebat)
+                            GameAssetManager.playSfx("batDeath");
                     }
+
                     break;
                 }
             }
+
         }
 
         Iterator<XpDrop> xpIter = drops.iterator();
@@ -245,6 +258,9 @@ public class GameMap implements Serializable {
     }
 
 
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
 
     public void dispose() {
     }

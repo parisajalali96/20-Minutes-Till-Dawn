@@ -15,6 +15,7 @@ public class KeyControl {
     public static int reloadWeapon = Input.Keys.R;
     public static int cheatCodeMenu = Input.Keys.C;
     public static int pauseGame = Input.Keys.P;
+    public static int autoAim = Input.Keys.SPACE;
 
     public static Map<String, Integer> getKeyControl(){
         Map<String, Integer> keyControl = new HashMap<>();
@@ -26,6 +27,7 @@ public class KeyControl {
         keyControl.put("Reload Weapon", reloadWeapon);
         keyControl.put("Cheat Code Activator", cheatCodeMenu);
         keyControl.put("Pause Game", pauseGame);
+        keyControl.put("Auto Aim", autoAim);
         return keyControl;
     }
 
@@ -44,6 +46,7 @@ public class KeyControl {
             case "Reload Weapon": reloadWeapon = newKey; break;
             case "Cheat Code Activator": cheatCodeMenu = newKey; break;
             case "Pause Game": pauseGame = newKey; break;
+            case "Auto Aim": autoAim = newKey; break;
         }
     }
 

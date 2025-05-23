@@ -6,17 +6,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.github.parisajalali96.Models.Enums.EnemyState;
 import io.github.parisajalali96.Models.Enums.EnemyType;
 
 public class Enemy {
     private final EnemyType type;
     private int health;
-    private boolean isAlive;
+    private EnemyState state;
     private Vector2 position;
     private Animation<TextureRegion> idleAnimation;
     private Animation<TextureRegion> spawnAnimation;
     private Animation<TextureRegion> attackAnimation;
-    private Animation<TextureRegion> deathAnimation;
     private float stateTime = 0f;
     private boolean isMoving = false;
     private final float NORMAL_SPEED = 60f;
@@ -34,8 +34,13 @@ public class Enemy {
     private float shootingCoolDown = 3f;
     private float shootingTimer = 0f;
 
+
     //for attacking
     private float timeSinceLastAttack = 0f;
+
+    //for death animation
+    private Animation<TextureRegion> deathAnimation;
+    private float stateTimer = 0f;
 
     public Enemy(EnemyType type, Vector2 position, Animation<TextureRegion> idleAnimation,
                  Animation<TextureRegion> spawnAnimation, Animation<TextureRegion> attackAnimation, Animation<TextureRegion> deathAnimation) {
@@ -45,17 +50,18 @@ public class Enemy {
         this.idleAnimation = idleAnimation;
         this.spawnAnimation = spawnAnimation;
         this.attackAnimation = attackAnimation;
-        this.deathAnimation = idleAnimation;
-        isAlive = true;
+        this.deathAnimation = deathAnimation;
+        deathAnimation.setPlayMode(Animation.PlayMode.NORMAL);
+        state = EnemyState.ALIVE;
         spawnedFromRight = position.x > (float) Gdx.graphics.getWidth() / 2;
     }
 
     public void update(float delta) {
         stateTime += delta;
         timeSinceLastAttack += delta;
-        if (!isAlive) {
+        if (state == EnemyState.DYING) {
             if (deathAnimation.isAnimationFinished(stateTime)) {
-                deathAnimationPlayed = true;
+                state = EnemyState.DEAD;
             }
             return;
         }
@@ -100,23 +106,30 @@ public class Enemy {
 
     public void draw(SpriteBatch batch) {
         TextureRegion currentFrame;
-        if(!isAlive) {
-            currentFrame = deathAnimation.getKeyFrame(stateTime, true);
-        } else if(type != EnemyType.Eyebat && type != EnemyType.Elder && type != EnemyType.BrainMonster) {
-            if(type == EnemyType.TentacleMonster ) {
-                if (!isSpawned) {
-                    currentFrame = spawnAnimation.getKeyFrame(stateTime);
-                    if (spawnAnimation.isAnimationFinished(stateTime)) {
-                        isSpawned = true;
-                        stateTime = 0f;
-                    }
-                } else {
-                    currentFrame = idleAnimation.getKeyFrame(stateTime, true);
-                }
-            } else currentFrame = idleAnimation.getKeyFrame(stateTime, true);
-        } else {
-            currentFrame = attackAnimation.getKeyFrame(stateTime, true);
+        if (state == EnemyState.DYING) {
+            if (deathAnimation.getPlayMode() != Animation.PlayMode.NORMAL)
+                deathAnimation.setPlayMode(Animation.PlayMode.NORMAL);
+
+            currentFrame = deathAnimation.getKeyFrame(stateTime, false);
+            batch.draw(currentFrame, position.x, position.y);
+            return;
         }
+
+        if(type != EnemyType.Eyebat && type != EnemyType.Elder && type != EnemyType.BrainMonster) {
+                if (type == EnemyType.TentacleMonster) {
+                    if (!isSpawned) {
+                        currentFrame = spawnAnimation.getKeyFrame(stateTime);
+                        if (spawnAnimation.isAnimationFinished(stateTime)) {
+                            isSpawned = true;
+                            stateTime = 0f;
+                        }
+                    } else {
+                        currentFrame = idleAnimation.getKeyFrame(stateTime, true);
+                    }
+                } else currentFrame = idleAnimation.getKeyFrame(stateTime, true);
+            } else {
+                currentFrame = attackAnimation.getKeyFrame(stateTime, true);
+            }
 
         Vector2 playerPosition = Game.getCurrentPlayer().getPosition();
         float x = playerPosition.x - position.x;
@@ -163,18 +176,11 @@ public class Enemy {
     public void addHealth(int amount) {
         this.health += amount;
         if (this.health <= 0) {
-            this.health = 0;
-            isAlive = false;
+            this.health = 0 ;
+            die();
         }
     }
 
-
-    public boolean isAlive() {
-        return isAlive;
-    }
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
 
     public void followPlayer(Vector2 playerPosition, float delta) {
         Vector2 direction = new Vector2(playerPosition).sub(position);
@@ -212,6 +218,24 @@ public class Enemy {
         timeSinceLastAttack = 0f;
     }
 
+    public void die() {
+        if (state == EnemyState.ALIVE) {
+            state = EnemyState.DYING;
+            stateTime = 0f;
+        }
+    }
+
+    public boolean isDying() {
+        return state == EnemyState.DYING;
+    }
+
+    public boolean isDead() {
+        return state == EnemyState.DEAD;
+    }
+
+    public EnemyState getState() {
+        return state;
+    }
 
 
 }
