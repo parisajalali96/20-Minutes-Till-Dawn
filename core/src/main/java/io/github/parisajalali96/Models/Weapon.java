@@ -169,5 +169,14 @@ public class Weapon implements Serializable {
     public int getAmmo() {
         return currentNumOfProjectiles;
     }
+    public void setAmmo(int ammo) {
+        this.ammo = ammo;
+    }
+    public void setProjectile(int projectile) {
+        this.projectile = projectile;
+    }
+    public void setCurrentNumOfProjectiles(int currentNumOfProjectiles) {
+        this.currentNumOfProjectiles = currentNumOfProjectiles;
+    }
 }
 

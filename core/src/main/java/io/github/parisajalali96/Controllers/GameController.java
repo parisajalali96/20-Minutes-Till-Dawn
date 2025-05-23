@@ -26,7 +26,13 @@ public class GameController {
     }
 
     public void endGame(boolean win) {
+        Game.getCurrentPlayer().addScore((int) (Game.getSecondsPassed()*Game.getCurrentPlayer().getKills()));
+        Game.getCurrentPlayer().getUser().addKills(Game.getCurrentPlayer().getKills());
+        Game.getCurrentPlayer().getUser().setLongestSurvivalScore(Game.getSecondsPassed());
+        Game.getCurrentPlayer().reset();
         view.endGameWindow(win);
+        Game.resetGame();
+
     }
 
     //increases passed time one minute

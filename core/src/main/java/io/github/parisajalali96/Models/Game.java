@@ -124,6 +124,11 @@ public class Game {
         Game.countdown = countdown;
     }
 
+    public static void resetGame() {
+        map = new GameMap();
+        secondsPassed = 0f;
+    }
+
 
 
 

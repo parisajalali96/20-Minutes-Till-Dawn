@@ -9,7 +9,7 @@ public class User implements Serializable {
     private String SQ;
     private String SA;
     private int totalScore;
-    private int longestSurvivalScore;
+    private float longestSurvivalScore;
     private int numOfKills;
 
     public User(String username, String password) {
@@ -24,12 +24,14 @@ public class User implements Serializable {
     public void addNumOfKills(int numOfKills) {
         this.numOfKills += numOfKills;
     }
-    public int getLongestSurvivalScore() {
+    public float getLongestSurvivalScore() {
         return longestSurvivalScore;
     }
 
-    public void setLongestSurvivalScore(int longestSurvivalScore) {
-        this.longestSurvivalScore = longestSurvivalScore;
+    public void setLongestSurvivalScore(float longestSurvivalScore) {
+        if(longestSurvivalScore > this.longestSurvivalScore) {
+            this.longestSurvivalScore = longestSurvivalScore;
+        }
     }
 
     public String getUsername() {
@@ -62,5 +64,10 @@ public class User implements Serializable {
     public int getTotalScore() {
         return totalScore;
     }
+    public void addKills(int kills) {
+        numOfKills += kills;
+    }
+
+
 
 }

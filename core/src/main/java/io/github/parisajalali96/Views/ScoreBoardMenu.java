@@ -71,7 +71,7 @@ public class ScoreBoardMenu implements Screen {
         });
         survivalHeader.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                users.sort(Comparator.comparingInt(User::getLongestSurvivalScore).reversed());
+                users.sort(Comparator.comparingDouble(User::getLongestSurvivalScore).reversed());
                 refreshTable();
             }
         });

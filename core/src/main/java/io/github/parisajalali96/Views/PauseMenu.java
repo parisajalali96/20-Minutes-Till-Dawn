@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.parisajalali96.Controllers.GameController;
 import io.github.parisajalali96.Controllers.MainMenuController;
 import io.github.parisajalali96.Controllers.PauseMenuController;
 import io.github.parisajalali96.Controllers.SaveGameManager;
@@ -221,6 +222,7 @@ public class PauseMenu implements Screen {
 
         giveUpLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                Game.getGameView().getController().endGame(false);
                 Main.getMain().setScreen(new MainMenu(new MainMenuController(),
                     GameAssetManager.getGameAssetManager().getSkin()));
             }

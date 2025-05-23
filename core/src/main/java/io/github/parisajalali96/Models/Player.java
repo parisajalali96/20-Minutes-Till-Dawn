@@ -335,6 +335,23 @@ public class Player implements Serializable {
     public List<AbilityType> getAbilities() {
         return collectedAbilities;
     }
+    public void addScore(int score) {
+        this.user.addTotalScore(score);
+        this.score += score;
+    }
+
+    public void reset(){
+        score = 0;
+        health = hero.getHP();
+        level = 1;
+        xp = 0;
+        kills = 0;
+        weapon.setAmmo(weapon.getType().getAmmoMax());
+        weapon.setProjectile(weapon.getType().getProjectile());
+        weapon.setCurrentNumOfProjectiles(weapon.getType().getAmmoMax());
+        collectedAbilities = new ArrayList<>();
+    }
+
 
 
 }

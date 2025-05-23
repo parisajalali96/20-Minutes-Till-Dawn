@@ -361,11 +361,15 @@ public class GameView implements Screen {
         statusLabel.setAlignment(Align.center);
         window.add(statusLabel).colspan(2).padBottom(20).row();
 
+        Label userNameLabel = new Label("Username: " + Game.getCurrentPlayer().getUser().getUsername(), skin);
+        Label survivalTime = new Label("Survival Time: " + formatTime(Game.getSecondsPassed()), skin);
         Label killsLabel = new Label("Total Kills: " + Game.getCurrentPlayer().getKills(), skin);
-        Label scoreLabel = new Label("Total Score: " + Game.getCurrentPlayer().getScore(), skin);
+        Label scoreLabel = new Label("Total Score: " + (int)(Game.getSecondsPassed()*Game.getCurrentPlayer().getKills()), skin);
         killsLabel.setAlignment(Align.center);
         scoreLabel.setAlignment(Align.center);
 
+        window.add(userNameLabel).colspan(10).row();
+        window.add(survivalTime).colspan(10).row();
         window.add(killsLabel).colspan(10).row();
         window.add(scoreLabel).colspan(10).row();
 
@@ -382,6 +386,7 @@ public class GameView implements Screen {
 
         container.add(window).width(600).height(400);
         winStage.addActor(container);
+        container.toFront();
         Gdx.input.setInputProcessor(winStage);
     }
 
