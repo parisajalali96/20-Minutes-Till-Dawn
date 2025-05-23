@@ -65,7 +65,9 @@ public enum Hero {
         Hero[] values = values();
         return values[new Random().nextInt(values.length)];
     }
-
+    public String getPortraitTexturePath(){
+        return portraitTexturePath;
+    }
     public int getHP() {
         return HP;
     }

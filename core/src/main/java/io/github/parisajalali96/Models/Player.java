@@ -14,12 +14,14 @@ import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Enums.Hero;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 
-public class Player {
+public class Player implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final User user;
     private Hero hero;
     private Weapon weapon = new Weapon(WeaponType.REVOLVER);
@@ -43,10 +45,10 @@ public class Player {
 
 
     // Animation fields
-    private Animation<TextureRegion> walkAnimation;
+    private transient Animation<TextureRegion> walkAnimation;
     private float stateTime = 0f;
     private boolean isMoving = false;
-    private TextureRegion idleFrame;
+    private transient TextureRegion idleFrame;
 
     //abilities
     private List<AbilityType> collectedAbilities = new ArrayList<>();

@@ -14,11 +14,13 @@ import io.github.parisajalali96.Models.Enums.TileTexture;
 import org.w3c.dom.Text;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GameMap {
+public class GameMap implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final int MAP_WIDTH = 100;
     private static final int MAP_HEIGHT = 100;
     private static final int TILE_SIZE = 32;

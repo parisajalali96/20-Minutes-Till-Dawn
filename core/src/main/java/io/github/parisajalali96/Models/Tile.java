@@ -4,9 +4,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public class Tile {
+import java.io.Serializable;
+
+public class Tile implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final int TILE_SIZE = 32;
-    private TextureRegion texture;
+    private transient TextureRegion texture;
     private boolean walkable;
     private int x, y;
     private boolean isOccupied;

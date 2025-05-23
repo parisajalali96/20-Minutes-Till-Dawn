@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.parisajalali96.Controllers.*;
@@ -21,6 +22,7 @@ import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Player;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MainMenu implements Screen {
     private Stage stage;
@@ -74,6 +76,8 @@ public class MainMenu implements Screen {
                         handleMenuSelection(menuNames[finalI]);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
                     }
                 }
 
@@ -111,7 +115,7 @@ public class MainMenu implements Screen {
 
 
 
-    private void handleMenuSelection(String menuName) throws IOException {
+    private void handleMenuSelection(String menuName) throws IOException, ClassNotFoundException {
         switch (menuName) {
             case "Settings": {
                 Main.getMain().setScreen(new SettingsMenu(new SettingsMenuController(),
@@ -139,8 +143,58 @@ public class MainMenu implements Screen {
                 break;
             }
             case "Continue Saved Game": {
+                Window savedGameWindow = new Window("Saved Games", skin);
+                savedGameWindow.setMovable(true);
+                savedGameWindow.setSize(700, 500);
+                savedGameWindow.setPosition(
+                    (Gdx.graphics.getWidth() - savedGameWindow.getWidth()) / 2f,
+                    (Gdx.graphics.getHeight() - savedGameWindow.getHeight()) / 2f
+                );
+                savedGameWindow.top().pad(15);
+
+                Table scrollTable = new Table();
+                scrollTable.top().left();
+                scrollTable.defaults().pad(8).left();
+
+                List<String> savedGames = SaveGameManager.getSavedGames();
+
+                for (String savedGame : savedGames) {
+                    GameInfoSaveManager info = GameInfoSaveManager.loadGameInfo(savedGame);
+
+                    Image heroImage = new Image(new Texture(Gdx.files.internal(info.getAvatarImage())));
+                    heroImage.setScaling(Scaling.fit);
+
+                    Label nameLabel = new Label(info.getSaveName(), skin);
+                    Label killsLabel = new Label("Kills: " + info.getKillCount(), skin);
+                    Label timeLabel = new Label("Time left: " + (int) info.getSecondsLeft() + "s", skin);
+
+                    TextButton loadButton = new TextButton("Load", skin);
+                    loadButton.addListener(new ClickListener() {
+                        public void clicked(InputEvent event, float x, float y) {
+                            // loadFullGame(savedGame);
+                        }
+                    });
+
+                    Table row = new Table();
+                    row.left();
+                    row.add(heroImage).size(64).padRight(15);
+                    row.add(nameLabel).padRight(25);
+                    row.add(killsLabel).padRight(25);
+                    row.add(timeLabel).padRight(25);
+                    row.add(loadButton);
+
+                    scrollTable.add(row).left().row();
+                }
+
+                ScrollPane scrollPane = new ScrollPane(scrollTable, skin);
+                scrollPane.setFadeScrollBars(false);
+
+                savedGameWindow.add(scrollPane).expand().fill().pad(10).row();
+
+                stage.addActor(savedGameWindow);
                 break;
             }
+
         }
     }
 

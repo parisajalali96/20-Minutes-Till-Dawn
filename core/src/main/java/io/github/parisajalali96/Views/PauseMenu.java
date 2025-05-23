@@ -12,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import io.github.parisajalali96.Controllers.MainMenuController;
 import io.github.parisajalali96.Controllers.PauseMenuController;
+import io.github.parisajalali96.Controllers.SaveGameManager;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Game;
@@ -29,6 +31,7 @@ public class PauseMenu implements Screen {
     private final Label resumeLabel;
     private final Label showCheatCodesLabel;
     private final Label abilitiesLabel;
+    private final Label giveUpLabel;
     private final Label saveAndQuitLabel;
     private Window pauseMenuWindow;
     private PauseMenuController controller;
@@ -44,6 +47,7 @@ public class PauseMenu implements Screen {
         showCheatCodesLabel = new Label("Cheat Codes", skin, "subtitle");
         abilitiesLabel = new Label("Abilities", skin, "subtitle");
         saveAndQuitLabel = new Label("Save & Quit", skin, "subtitle");
+        giveUpLabel = new Label("Give Up", skin, "subtitle");
         scrollContent = new Table();
         scrollPane = new ScrollPane(scrollContent);
 
@@ -115,6 +119,7 @@ public class PauseMenu implements Screen {
         pauseMenuWindow.add(showCheatCodesLabel).row();
         pauseMenuWindow.add(abilitiesLabel).row();
         pauseMenuWindow.add(saveAndQuitLabel).row();
+        pauseMenuWindow.add(giveUpLabel).row();
 
         scrollContent = new Table();
         scrollContent.top().left();
@@ -179,16 +184,49 @@ public class PauseMenu implements Screen {
 
         saveAndQuitLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                try {
-                    Game.saveGame();
-                    Gdx.app.exit();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                scrollContent.clear();
+                scrollPaneWindow.setVisible(true);
+                scrollPaneWindow.toFront();
+
+                Label nameGame = new Label("Pick a name for this game:", skin);
+                nameGame.setAlignment(Align.center);
+                scrollContent.add(nameGame).padBottom(10).row();
+
+                TextField gameName = new TextField("", skin);
+                gameName.setMessageText("Enter Game Name");
+                gameName.setAlignment(Align.center);
+                scrollContent.add(gameName).width(300).padBottom(20).row();
+
+                TextButton saveButton = new TextButton("Save and Quit", skin);
+                scrollContent.add(saveButton).row();
+
+                saveButton.addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        String name = gameName.getText().trim();
+                        if (!name.isEmpty()) {
+                            //                                Label thisIs = new Label("This is working", skin);
+//                                thisIs.setAlignment(Align.center);
+//                                scrollContent.add(thisIs).width(300).padBottom(20).row();
+                            SaveGameManager.saveGame(Game.getCurrentPlayer(), Game.getMap(), name);
+                            Main.getMain().setScreen(new MainMenu(new MainMenuController(),
+                                GameAssetManager.getGameAssetManager().getSkin()));
+                        } else {
+                            gameName.setMessageText("Please enter a valid name!");
+                        }
+                    }
+                });
             }
         });
 
-        for (Label label : new Label[]{resumeLabel, showCheatCodesLabel, abilitiesLabel, saveAndQuitLabel}) {
+
+        giveUpLabel.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                Main.getMain().setScreen(new MainMenu(new MainMenuController(),
+                    GameAssetManager.getGameAssetManager().getSkin()));
+            }
+        });
+
+        for (Label label : new Label[]{resumeLabel, showCheatCodesLabel, abilitiesLabel, saveAndQuitLabel, giveUpLabel}) {
             label.addListener(new ClickListener() {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     label.setColor(1f, 0.2f, 0.6f, 1f);

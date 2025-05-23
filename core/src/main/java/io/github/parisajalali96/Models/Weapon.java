@@ -7,14 +7,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Weapon {
+public class Weapon implements Serializable {
+    private static final long serialVersionUID = 1L;
     private WeaponType type;
-    private Texture texture;
-    private Texture bulletTexture;
+    private transient Texture texture;
+    private transient Texture bulletTexture;
     private final List<Projectile> projectiles = new ArrayList<>();
     private int currentNumOfProjectiles;
     private int damage;
@@ -22,7 +24,7 @@ public class Weapon {
     private int ammo;
 
     //for reload
-    private Animation<TextureRegion> reloadAnimation;
+    private transient Animation<TextureRegion> reloadAnimation;
     private float reloadAnimTimer = 0f;
     private boolean reloading = false;
     private float reloadTimer = 0f;
