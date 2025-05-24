@@ -40,7 +40,7 @@ public class MainMenu implements Screen {
         this.skin = skin;
         Player currentPlayer = Game.getCurrentPlayer();
         avatar = new Image(new TextureRegionDrawable
-            (new TextureRegion(currentPlayer.getHero().getTexture())));
+            (new TextureRegion(currentPlayer.getAvatar())));
         username = new Label("Player: " + currentPlayer.getUsername(), skin);
         score = new Label("Score: " + currentPlayer.getScore(), skin);
 
@@ -97,6 +97,7 @@ public class MainMenu implements Screen {
 
         Table centerRow = new Table(skin);
         centerRow.add(menuTable).top().left().padRight(20);
+        avatar.setScaling(Scaling.fit);
         centerRow.add(avatar).size(400, 400).padLeft(20);
         mainTable.add(centerRow).expand().padTop(10).row();
 

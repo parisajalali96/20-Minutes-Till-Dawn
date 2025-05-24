@@ -24,6 +24,7 @@ import java.util.Random;
 public class Player implements Serializable {
     private static final long serialVersionUID = 1L;
     private final User user;
+    private transient Texture avatarTexture;
     private Hero hero;
     private Weapon weapon = new Weapon(WeaponType.REVOLVER);
     private int score;
@@ -69,6 +70,7 @@ public class Player implements Serializable {
     public Player(User user) {
         this.user = user;
         setRandomHero();
+        avatarTexture = hero.getTexture();
         health =  hero.getHP();
         speed = hero.getSpeed();
 
@@ -350,6 +352,13 @@ public class Player implements Serializable {
         weapon.setProjectile(weapon.getType().getProjectile());
         weapon.setCurrentNumOfProjectiles(weapon.getType().getAmmoMax());
         collectedAbilities = new ArrayList<>();
+    }
+
+    public void setAvatar(Texture avatar) {
+        this.avatarTexture = avatar;
+    }
+    public Texture getAvatar() {
+        return avatarTexture;
     }
 
 

@@ -156,6 +156,7 @@ public class GameMap implements Serializable {
         Iterator<XpDrop> xpIter = drops.iterator();
         while (xpIter.hasNext()) {
             XpDrop dot = xpIter.next();
+            dot.update(delta);
             if (dot.isPickedUpBy(player)) {
                 GameAssetManager.playSfx("xpDrop");
                 dot.addXp();
