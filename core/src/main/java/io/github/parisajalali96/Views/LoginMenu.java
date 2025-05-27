@@ -23,17 +23,17 @@ import io.github.parisajalali96.Models.Result;
 import java.io.IOException;
 
 
-public class LoginMenu implements Screen {
+public class LoginMenu extends Menu implements Screen {
     private Stage stage;
-    private Skin skin;
-    private final TextField usernameField;
-    private final TextField passwordField;
-    private final TextButton loginButton;
-    private final TextButton forgotPasswordButton;
-    private final Label gameTitle;
-    private final TextButton backButton;
-    private Table table;
-    private final LoginMenuController controller;
+    private final Skin skin;
+    public final TextField usernameField;
+    public final TextField passwordField;
+    public final TextButton loginButton;
+    public final TextButton forgotPasswordButton;
+    public final Label gameTitle;
+    public final TextButton backButton;
+    public final Table table;
+    public final LoginMenuController controller;
 
     public LoginMenu(LoginMenuController controller, Skin skin) {
         this.controller = controller;
@@ -72,54 +72,9 @@ public class LoginMenu implements Screen {
         table.add(forgotPasswordButton).colspan(2).center();
 
         stage.addActor(table);
-
-        loginButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                String username = usernameField.getText();
-                String password = passwordField.getText();
-                Result result = null;
-                try {
-                    result = controller.loginUser(username, password);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                showResult(result);
-                if(result.isSuccess()) {
-                    Main.getMain().setScreen(new MainMenu(new MainMenuController(),
-                        GameAssetManager.getGameAssetManager().getSkin()));
-                }
-            }
-        });
-
-        forgotPasswordButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                Main.getMain().setScreen(new ForgotPassView(new ForgotPassController(),
-                    GameAssetManager.getGameAssetManager().getSkin()));
-            }
-        });
-
-        backButton.addListener(new ChangeListener() {
-
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Main.getMain().setScreen(new RegisterMenu(new RegisterMenuController(),
-                    GameAssetManager.getGameAssetManager().getSkin()));
-            }
-        });
-
+        controller.addListeners();
     }
 
-    private void showResult(Result result) {
-        Dialog dialog = new Dialog(result.isSuccess() ? "Success" : "Error", skin);
-        Label label = new Label(result.getMessage(), skin);
-        label.setWrap(true);
-        label.setAlignment(Align.center);
-        dialog.getContentTable().add(label).width(300).pad(20);
-        dialog.button("OK");
-        dialog.show(stage);
-    }
 
 
     @Override

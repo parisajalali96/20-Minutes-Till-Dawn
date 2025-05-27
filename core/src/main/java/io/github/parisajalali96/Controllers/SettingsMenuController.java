@@ -1,6 +1,7 @@
 package io.github.parisajalali96.Controllers;
 
 
+import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Result;
 import io.github.parisajalali96.Views.SettingsMenu;
 
@@ -17,15 +18,13 @@ public class SettingsMenuController {
     }
 
     //change music
-    public Result changeMusic(){
-        //TODO implement
-        return null;
+    public void changeMusic(String musicName){
+        GameAssetManager.getGameAssetManager().setMusic(musicName);
     }
 
     //change sfx state
-    public Result changeSfx(){
-        //TODO implement
-        return null;
+    public void changeSfx(boolean sfx){
+        GameAssetManager.getGameAssetManager().setSfxEnabled(sfx);
     }
 
     //change game controllers
@@ -33,5 +32,10 @@ public class SettingsMenuController {
         //TODO implement
         return null;
     }
+
+    //add listeners
+    public void addListeners() {}
+
+
 
 }

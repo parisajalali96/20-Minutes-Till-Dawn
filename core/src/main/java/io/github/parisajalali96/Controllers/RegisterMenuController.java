@@ -1,6 +1,11 @@
 package io.github.parisajalali96.Controllers;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.*;
+import io.github.parisajalali96.Views.LoginMenu;
+import io.github.parisajalali96.Views.MainMenu;
 import io.github.parisajalali96.Views.RegisterMenu;
 
 import java.io.IOException;
@@ -42,6 +47,54 @@ public class RegisterMenuController {
         Game.addPlayer(guestPlayer);
         Game.setCurrentPlayer(guestPlayer);
         return new Result(true, "You're now playing as a guest!");
+    }
+
+    //add listeners
+    public void addListeners() {
+        view.registerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String username = view.usernameField.getText();
+                String password = view.passwordField.getText();
+                String question = view.questionBox.getSelected();
+                String answer = view.answerField.getText();
+
+                try {
+                    Result result = registerUser(username, password, question, answer);
+                    view.showResult(result);
+                    if (result.isSuccess()) {
+                        Main.getMain().setScreen(new LoginMenu(
+                            new LoginMenuController(),
+                            GameAssetManager.getGameAssetManager().getSkin()
+                        ));
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        view.guestButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Result result = playAsAGuest();
+                view.showResult(result);
+                if (result.isSuccess()) {
+                    Main.getMain().setScreen(new MainMenu(new MainMenuController(),
+                        GameAssetManager.getGameAssetManager().getSkin()));
+                }
+            }
+        });
+
+        view.continueToLoginButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Main.getMain().setScreen(new LoginMenu(
+                    new LoginMenuController(),
+                    GameAssetManager.getGameAssetManager().getSkin()
+                ));
+            }
+        });
     }
 
 }

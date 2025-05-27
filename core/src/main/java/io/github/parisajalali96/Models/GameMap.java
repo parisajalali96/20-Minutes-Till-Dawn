@@ -19,6 +19,7 @@ import io.github.parisajalali96.Models.Enums.TileTexture;
 import org.w3c.dom.Text;
 
 import java.awt.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,7 +77,7 @@ public class GameMap implements Serializable {
         enemies.add(new Enemy(type, position, idleAnimation, spawnAnimation, attackAnimation, deathAnimation));
     }
 
-    public void update(float delta) {
+    public void update(float delta) throws IOException {
         Game.addSecondsPassed(delta);
 
         if (!treesSpawned) {

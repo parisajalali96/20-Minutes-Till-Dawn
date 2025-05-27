@@ -186,28 +186,26 @@ public class PauseMenu implements Screen {
         saveAndQuitLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 scrollContent.clear();
+                scrollContent.setFillParent(true);
                 scrollPaneWindow.setVisible(true);
                 scrollPaneWindow.toFront();
 
                 Label nameGame = new Label("Pick a name for this game:", skin);
                 nameGame.setAlignment(Align.center);
-                scrollContent.add(nameGame).padBottom(10).row();
 
                 TextField gameName = new TextField("", skin);
                 gameName.setMessageText("Enter Game Name");
                 gameName.setAlignment(Align.center);
-                scrollContent.add(gameName).width(300).padBottom(20).row();
 
                 TextButton saveButton = new TextButton("Save and Quit", skin);
-                scrollContent.add(saveButton).row();
+                scrollContent.add(nameGame).padBottom(10).center().expandX().row();
+                scrollContent.add(gameName).width(300).padBottom(20).center().expandX().row();
+                scrollContent.add(saveButton).center().expandX().row();
 
                 saveButton.addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
                         String name = gameName.getText().trim();
                         if (!name.isEmpty()) {
-                            //                                Label thisIs = new Label("This is working", skin);
-//                                thisIs.setAlignment(Align.center);
-//                                scrollContent.add(thisIs).width(300).padBottom(20).row();
                             SaveGameManager.saveGame(Game.getCurrentPlayer(), Game.getMap(), name);
                             Main.getMain().setScreen(new MainMenu(new MainMenuController(),
                                 GameAssetManager.getGameAssetManager().getSkin()));
@@ -222,7 +220,11 @@ public class PauseMenu implements Screen {
 
         giveUpLabel.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                Game.getGameView().getController().endGame(false);
+                try {
+                    Game.getGameView().getController().endGame(false);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 Main.getMain().setScreen(new MainMenu(new MainMenuController(),
                     GameAssetManager.getGameAssetManager().getSkin()));
             }

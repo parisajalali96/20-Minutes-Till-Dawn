@@ -3,8 +3,10 @@ package io.github.parisajalali96.Controllers;
 import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Enums.EnemyType;
 import io.github.parisajalali96.Models.Game;
+import io.github.parisajalali96.Models.UserStorage;
 import io.github.parisajalali96.Views.GameView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,11 +27,12 @@ public class GameController {
         return available.subList(0, Math.min(3, available.size()));
     }
 
-    public void endGame(boolean win) {
+    public void endGame(boolean win) throws IOException {
         view.endGameWindow(win);
         Game.getCurrentPlayer().addScore((int) (Game.getSecondsPassed()*Game.getCurrentPlayer().getKills()));
         Game.getCurrentPlayer().getUser().addKills(Game.getCurrentPlayer().getKills());
         Game.getCurrentPlayer().getUser().setLongestSurvivalScore(Game.getSecondsPassed());
+        UserStorage.updateUser(Game.getCurrentPlayer().getUser());
         Game.getCurrentPlayer().reset();
         Game.resetGame();
 
@@ -47,7 +50,7 @@ public class GameController {
     }
 
     //add HP
-    public void playerHPCheatCode(){
+    public void playerHPCheatCode() throws IOException {
         if(Game.getCurrentPlayer().getHealth() == 0) Game.getCurrentPlayer().
             addHealth(Game.getCurrentPlayer().getHero().getHP());
     }

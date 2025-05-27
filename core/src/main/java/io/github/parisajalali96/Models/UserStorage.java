@@ -52,6 +52,18 @@ public class UserStorage {
         }
         return removed;
     }
+    public static void updateUser(User updatedUser) throws IOException {
+        List<User> users = loadUsers();
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUsername().equals(updatedUser.getUsername())) {
+                users.set(i, updatedUser);
+                break;
+            }
+        }
+        saveUsers(users);
+    }
+
+
 
 }
 

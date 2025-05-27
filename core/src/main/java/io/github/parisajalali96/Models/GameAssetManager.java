@@ -19,7 +19,7 @@ import java.util.Map;
 public class GameAssetManager {
     private static GameAssetManager gameAssetManager;
     private Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
-    private Music music;
+    private static Music music;
     private static boolean sfxEnabled = true;
     private static ArrayList<Music> playList = new ArrayList<>();
     private static int currentMusicIndex = 0;
@@ -45,15 +45,16 @@ public class GameAssetManager {
         sfxMap.put("levelUpUpgrade", Gdx.audio.newSound(Gdx.files.internal("AudioClip/Special & Powerup (10).wav")));
         sfxMap.put("xpDrop", Gdx.audio.newSound(Gdx.files.internal("AudioClip/Crystal Reward Tick.wav")));
 
-        playNextTrack();
+        //playNextTrack();
     }
 
     public void setMusicVolume(float volume) {
-        //music.setVolume(volume);
+        if (music != null) {
+            music.setVolume(volume);
+        }
     }
 
     public boolean isSfxEnabled() {
-        //TODO implement
         return sfxEnabled;
     }
 
@@ -62,7 +63,17 @@ public class GameAssetManager {
     }
 
     public void setMusic(String music) {
-        //TODO implement this
+        switch (music) {
+            case "Dungeon":{
+                Music music1 = Gdx.audio.newMusic(Gdx.files.internal("AudioClip/Pretty Dungeon LOOP.wav"));
+                this.music = music1;
+                return;
+            }
+            case "Wasteland":{
+                Music music2 = Gdx.audio.newMusic(Gdx.files.internal("AudioClip/Wasteland Combat Loop.wav"));
+                this.music = music2;
+            }
+        }
     }
 
     public void setSfxEnabled(boolean sfxEnabled) {
@@ -136,6 +147,14 @@ public class GameAssetManager {
 
 
     public float getMusicVolume() {
-        return 10;
+        if(music != null) return music.getVolume();
+        return 0;
     }
+
+    public static void playMusic(){
+        if(music != null) {
+            music.play();
+        }
+    }
+
 }

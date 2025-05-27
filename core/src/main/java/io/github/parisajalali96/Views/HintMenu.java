@@ -31,17 +31,17 @@ public class HintMenu implements Screen {
     private Stage stage;
     private Skin skin;
     private Table table;
-    private final TextButton exitButton;
-    private final Label heroInfoLabel;
-    private final Label weaponInfoLabel;
-    private final Label abilityInfoLabel;
-    private final Label cheatCodesInfoLabel;
-    private final Label gameControlInfoLabel;
-    private final HintMenuController controller;
-    private final TextButton windowCloseButton;
+    public final TextButton exitButton;
+    public final Label heroInfoLabel;
+    public final Label weaponInfoLabel;
+    public final Label abilityInfoLabel;
+    public final Label cheatCodesInfoLabel;
+    public final Label gameControlInfoLabel;
+    public final HintMenuController controller;
+    public final TextButton windowCloseButton;
 
-    private ScrollPane scrollPane;
-    private Table scrollContent;
+    public ScrollPane scrollPane;
+    public Table scrollContent;
 
 
     public HintMenu(HintMenuController controller, Skin skin) {

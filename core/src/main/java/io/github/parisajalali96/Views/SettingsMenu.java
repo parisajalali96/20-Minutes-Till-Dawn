@@ -72,7 +72,7 @@ public class SettingsMenu implements Screen {
         volumeValueLabel.setText(String.format("%.0f%%", volumeSlider.getValue() * 100));
         sfxCheckBox.setChecked(GameAssetManager.getGameAssetManager().isSfxEnabled());
         autoReloadCheckBox.setChecked(Game.isAutoReloadActive());
-        musicSelector.setItems("Music 1", "Music 2", "Music 3");
+        musicSelector.setItems("Dungeon","WasteLand");
         musicSelector.setSelected(GameAssetManager.getGameAssetManager().getMusic());
 
         volumeSlider.addListener(new ChangeListener() {
@@ -87,7 +87,7 @@ public class SettingsMenu implements Screen {
         sfxCheckBox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                GameAssetManager.getGameAssetManager().setSfxEnabled(sfxCheckBox.isChecked());
+                controller.changeSfx(sfxCheckBox.isChecked());
             }
         });
 
@@ -102,6 +102,7 @@ public class SettingsMenu implements Screen {
         musicSelector.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                controller.changeMusic(musicSelector.getSelected());
                 GameAssetManager.getGameAssetManager().setMusic(musicSelector.getSelected());
             }
         });

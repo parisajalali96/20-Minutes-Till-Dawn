@@ -82,7 +82,7 @@ public class Game {
         return autoReloadActive;
     }
 
-    public static void update(float delta) {
+    public static void update(float delta) throws IOException {
         //addSecondsPassed(delta);
 
         //countdown

@@ -17,22 +17,22 @@ import io.github.parisajalali96.Models.Result;
 
 import java.io.IOException;
 
-public class RegisterMenu implements Screen {
+public class RegisterMenu extends Menu implements Screen {
 
     private final Stage stage;
     private final Skin skin;
     private final RegisterMenuController controller;
 
-    private final TextField usernameField;
-    private final TextField passwordField;
-    private final SelectBox<String> questionBox;
-    private final TextField answerField;
+    public final TextField usernameField;
+    public final TextField passwordField;
+    public final SelectBox<String> questionBox;
+    public final TextField answerField;
 
-    private final TextButton registerButton;
-    private final TextButton guestButton;
-    private final TextButton continueToLoginButton;
+    public final TextButton registerButton;
+    public final TextButton guestButton;
+    public final TextButton continueToLoginButton;
 
-    private final Label gameTitle;
+    public final Label gameTitle;
 
     public RegisterMenu(RegisterMenuController controller, Skin skin) {
         this.controller = controller;
@@ -67,54 +67,6 @@ public class RegisterMenu implements Screen {
         controller.setView(this);
     }
 
-
-    private void setupListeners() {
-        registerButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String username = usernameField.getText();
-                String password = passwordField.getText();
-                String question = questionBox.getSelected();
-                String answer = answerField.getText();
-
-                try {
-                    Result result = controller.registerUser(username, password, question, answer);
-                    showResult(result);
-                    if (result.isSuccess()) {
-                        Main.getMain().setScreen(new LoginMenu(
-                            new LoginMenuController(),
-                            GameAssetManager.getGameAssetManager().getSkin()
-                        ));
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-        guestButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Result result = controller.playAsAGuest();
-                showResult(result);
-                if (result.isSuccess()) {
-                    Main.getMain().setScreen(new MainMenu(new MainMenuController(),
-                        GameAssetManager.getGameAssetManager().getSkin()));
-                }
-            }
-        });
-
-        continueToLoginButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Main.getMain().setScreen(new LoginMenu(
-                    new LoginMenuController(),
-                    GameAssetManager.getGameAssetManager().getSkin()
-                ));
-            }
-        });
-    }
-
     public void showResult(Result result) {
         Dialog dialog = new Dialog(result.isSuccess() ? "Success" : "Error", skin);
         dialog.text(result.getMessage()).button("OK", true).show(stage);
@@ -145,7 +97,7 @@ public class RegisterMenu implements Screen {
         table.add(buttonTable).top();
 
         stage.addActor(table);
-        setupListeners();
+        controller.addListeners();
     }
 
     @Override

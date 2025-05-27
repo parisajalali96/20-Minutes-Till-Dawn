@@ -81,7 +81,7 @@ public class GameView implements Screen {
 
     @Override
     public void show() {
-        GameAssetManager.playNextTrack();
+        GameAssetManager.playMusic();
         Game.setGameView(this);
         skin = GameAssetManager.getGameAssetManager().getSkin();
         abilityStage = new Stage();
@@ -180,8 +180,16 @@ public class GameView implements Screen {
         }
 
         if (!isPaused) {
-            map.update(delta);
-            Game.update(delta);
+            try {
+                map.update(delta);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                Game.update(delta);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             Game.getCurrentPlayer().update(delta, this.camera);
 
             if (Gdx.input.isKeyJustPressed(KeyControl.reloadWeapon)) {
@@ -323,7 +331,11 @@ public class GameView implements Screen {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     Game.getCurrentPlayer().addAbility(ability);
-                    ability.useAbility();
+                    try {
+                        ability.useAbility();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     abilityStage.clear();
                     Gdx.input.setInputProcessor(null);
                     abilityOptions = null;
@@ -436,7 +448,11 @@ public class GameView implements Screen {
                         controller.playerLevelCheatCode();
                         break;
                     case "CPR":
-                        controller.playerHPCheatCode();
+                        try {
+                            controller.playerHPCheatCode();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         break;
                     case "BIGBOSS":
                         controller.bossFightCheatCode();

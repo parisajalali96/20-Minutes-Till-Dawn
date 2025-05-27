@@ -15,6 +15,7 @@ import io.github.parisajalali96.Models.Enums.AbilityType;
 import io.github.parisajalali96.Models.Enums.Hero;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -214,7 +215,6 @@ public class Player implements Serializable {
             facingRight = false;
         }
 
-
         if (isMoving) {
             stateTime += delta;
         } else {
@@ -258,8 +258,6 @@ public class Player implements Serializable {
     }
 
 
-
-
     public void dispose() {
         hero.getMovementTexture().dispose();
         weapon.dispose();
@@ -292,7 +290,7 @@ public class Player implements Serializable {
         this.xp += xp;
         goToNextLevel();
     }
-    public void addHealth(int health) {
+    public void addHealth(int health) throws IOException {
         this.health += health;
         if(this.health <= 0) {
             this.health = 0;

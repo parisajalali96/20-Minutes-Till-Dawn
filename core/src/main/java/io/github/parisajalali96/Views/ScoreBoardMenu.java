@@ -76,17 +76,21 @@ public class ScoreBoardMenu implements Screen {
             }
         });
 
-        for ( int i = 0; i < users.size(); i++ ) {
+        for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
-            Label usernameLabel = new Label( String.valueOf(i + 1) + ". " + user.getUsername(), skin);
+            Label usernameLabel = new Label((i + 1) + ". " + user.getUsername(), skin);
             Label totalScoreLabel = new Label(String.valueOf(user.getTotalScore()), skin);
             Label killsLabel = new Label(String.valueOf(user.getNumOfKills()), skin);
-            Label survivalLabel = new Label(String.valueOf(user.getLongestSurvivalScore()), skin);
+            Label survivalLabel = new Label(formatTime(user.getLongestSurvivalScore()), skin);
 
+            Color highlightColor = null;
             if (i < 3) {
-                Color highlightColor = new Color(1f, 0.2f, 0.8f, 1f);
-                if(user.getUsername().equals(Game.getCurrentPlayer().getUsername()))
-                    highlightColor = new Color(1, 0.8f, 0, 1);
+                highlightColor = new Color(1f, 0.2f, 0.6f, 1f);
+            }
+            if (user.getUsername().equals(Game.getCurrentPlayer().getUsername())) {
+                highlightColor = new Color(0.2f, 0.9f, 0.8f, 1f);
+            }
+            if (highlightColor != null) {
                 usernameLabel.setColor(highlightColor);
                 totalScoreLabel.setColor(highlightColor);
                 killsLabel.setColor(highlightColor);
@@ -98,9 +102,11 @@ public class ScoreBoardMenu implements Screen {
             table.add(killsLabel).padLeft(20).padRight(50);
             table.add(survivalLabel).padLeft(20);
             table.row();
-
         }
+
+        table.add(exitButton).colspan(5).center().padTop(20);
     }
+
 
     @Override
     public void show() {
@@ -131,6 +137,12 @@ public class ScoreBoardMenu implements Screen {
 
         stage.act(Math.min(delta, 1 / 30f));
         stage.draw();
+    }
+
+    private String formatTime(float seconds) {
+        int minutes = (int)(seconds / 60);
+        int secs = (int)(seconds % 60);
+        return String.format("%02d:%02d", minutes, secs);
     }
 
     @Override public void resize(int width, int height) {}

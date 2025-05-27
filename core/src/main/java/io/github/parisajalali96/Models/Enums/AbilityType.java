@@ -5,13 +5,15 @@ import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.Player;
 import io.github.parisajalali96.Models.Weapon;
 
+import java.io.IOException;
+
 public enum AbilityType {
 
     VITALITY("Vitality", "Images/Sprite/Icon_SoothingWarmth.png", "Increases player HP")
         {
             //increase health
             @Override
-            public void useAbility(){
+            public void useAbility() throws IOException {
                 Game.getCurrentPlayer().addHealth(1);
             }
         },
@@ -60,7 +62,7 @@ public enum AbilityType {
         this.imagePath = imagePath;
         this.description = description;
     }
-    public abstract void useAbility();
+    public abstract void useAbility() throws IOException;
     public String getName() {
         return name;
     }
