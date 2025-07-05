@@ -37,6 +37,8 @@ public class SaveGameManager {
 
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(dir, "info.dat")))) {
                 out.writeObject(info);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             updateIndex(name);

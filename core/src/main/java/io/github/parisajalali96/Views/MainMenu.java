@@ -20,6 +20,7 @@ import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.Game;
 import io.github.parisajalali96.Models.GameAssetManager;
 import io.github.parisajalali96.Models.Player;
+import io.github.parisajalali96.Models.UserStorage;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +43,13 @@ public class MainMenu implements Screen {
         avatar = new Image(new TextureRegionDrawable
             (new TextureRegion(currentPlayer.getAvatar())));
         username = new Label("Player: " + currentPlayer.getUsername(), skin);
-        score = new Label("Score: " + currentPlayer.getScore(), skin);
+        int scoreNum = Game.getCurrentPlayer().getScore();
+        try {
+            scoreNum += UserStorage.findUserByUsername(Game.getCurrentPlayer().getUsername()).getTotalScore();
+        }catch (Exception e) {
+            //
+        }
+        score = new Label("Score: " + scoreNum, skin);
 
         logoutButton = new TextButton("Logout", skin);
 

@@ -74,6 +74,7 @@ public class GameView implements Screen {
     //level progress bar
     private ProgressBar levelBar;
     private Label levelLabel;
+    private int numOfHearts = 5;
 
     //auto aim
     private boolean isAutoAimActive = false;
@@ -449,7 +450,7 @@ public class GameView implements Screen {
                         break;
                     case "CPR":
                         try {
-                            controller.playerHPCheatCode();
+                            controller.playerHPCheatCode(numOfHearts);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -507,6 +508,7 @@ public class GameView implements Screen {
         int currentHP = Game.getCurrentPlayer().getHealth();
         int maxHP = Game.getCurrentPlayer().getHero().getHP();
         int filledHearts = (int) Math.round((double) currentHP / maxHP * heartImages.size);
+        numOfHearts = filledHearts;
 
         Animation<TextureRegion> heartAnim = GameAssetManager.getHeartAnimation();
         TextureRegion emptyHeart = GameAssetManager.getEmptyHeart();

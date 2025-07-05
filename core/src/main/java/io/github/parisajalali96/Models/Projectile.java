@@ -1,16 +1,16 @@
 package io.github.parisajalali96.Models;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Projectile {
+import java.io.Serializable;
+
+public class Projectile implements Serializable {
     private int damage;
     private Vector2 position;
     private Vector2 velocity;
-    private Texture texture;
+    private transient Texture texture;
     private boolean active = true;
     private float speed = 500f;
 

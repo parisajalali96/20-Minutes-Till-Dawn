@@ -9,14 +9,16 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.parisajalali96.Models.Enums.EnemyState;
 import io.github.parisajalali96.Models.Enums.EnemyType;
 
-public class Enemy {
+import java.io.Serializable;
+
+public class Enemy implements Serializable {
     private final EnemyType type;
     private int health;
     private EnemyState state;
     private Vector2 position;
-    private Animation<TextureRegion> idleAnimation;
-    private Animation<TextureRegion> spawnAnimation;
-    private Animation<TextureRegion> attackAnimation;
+    private transient Animation<TextureRegion> idleAnimation;
+    private transient Animation<TextureRegion> spawnAnimation;
+    private transient Animation<TextureRegion> attackAnimation;
     private float stateTime = 0f;
     private boolean isMoving = false;
     private final float NORMAL_SPEED = 60f;
@@ -39,7 +41,7 @@ public class Enemy {
     private float timeSinceLastAttack = 0f;
 
     //for death animation
-    private Animation<TextureRegion> deathAnimation;
+    private transient Animation<TextureRegion> deathAnimation;
     private float stateTimer = 0f;
 
     public Enemy(EnemyType type, Vector2 position, Animation<TextureRegion> idleAnimation,

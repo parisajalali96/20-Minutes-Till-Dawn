@@ -6,10 +6,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.github.parisajalali96.Models.Enums.WeaponType;
 
-public class XpDrop {
+import java.io.Serializable;
+
+public class XpDrop implements Serializable {
     private Vector2 dropLocation;
     private final int xp = 3;
-    private final TextureRegion textureRegion = new TextureRegion(WeaponType.getBulletTexture());
+    private final transient TextureRegion textureRegion = new TextureRegion(WeaponType.getBulletTexture());
 
     private static final float PICKUP_RADIUS = 20f;
     private static final float ATTRACTION_RADIUS = 150f;

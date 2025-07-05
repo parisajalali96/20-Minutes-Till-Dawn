@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 
-public class HintMenu implements Screen {
+public class HintMenu extends Menu implements Screen {
     private Stage stage;
     private Skin skin;
     private Table table;
@@ -61,6 +61,7 @@ public class HintMenu implements Screen {
     @Override
     public void show() {
         stage = new Stage(new ScreenViewport());
+        super.setStage(stage);
         Gdx.input.setInputProcessor(stage);
 
         table = new Table();

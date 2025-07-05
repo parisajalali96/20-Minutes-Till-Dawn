@@ -19,4 +19,7 @@ public class Menu {
         dialog.button("OK");
         dialog.show(stage);
     }
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 }

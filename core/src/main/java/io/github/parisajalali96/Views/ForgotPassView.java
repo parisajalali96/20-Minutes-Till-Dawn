@@ -4,13 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.github.parisajalali96.Controllers.ForgotPassController;
 import io.github.parisajalali96.Main;
+import io.github.parisajalali96.Models.GameAssetManager;
+import io.github.parisajalali96.Models.Result;
 
 
-public class ForgotPassView extends Menu implements Screen {
+public class ForgotPassView implements Screen {
     public Stage stage;
     private final Skin skin;
     public final Label gameTitle;
@@ -59,6 +62,17 @@ public class ForgotPassView extends Menu implements Screen {
         stage.addActor(table);
         controller.addListeners();
 
+    }
+
+    public void showResult(Result result) {
+        Dialog dialog = new Dialog(result.isSuccess() ? "Success" : "Error",
+            GameAssetManager.getGameAssetManager().getSkin());
+        Label label = new Label(result.getMessage(), GameAssetManager.getGameAssetManager().getSkin());
+        label.setWrap(true);
+        label.setAlignment(Align.center);
+        dialog.getContentTable().add(label).width(300).pad(20);
+        dialog.button("OK");
+        dialog.show(stage);
     }
 
     @Override

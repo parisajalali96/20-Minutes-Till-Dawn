@@ -23,7 +23,7 @@ import io.github.parisajalali96.Models.Result;
 import java.io.IOException;
 
 
-public class LoginMenu extends Menu implements Screen {
+public class LoginMenu implements Screen {
     private Stage stage;
     private final Skin skin;
     public final TextField usernameField;
@@ -75,7 +75,16 @@ public class LoginMenu extends Menu implements Screen {
         controller.addListeners();
     }
 
-
+    public void showResult(Result result) {
+        Dialog dialog = new Dialog(result.isSuccess() ? "Success" : "Error",
+            GameAssetManager.getGameAssetManager().getSkin());
+        Label label = new Label(result.getMessage(), GameAssetManager.getGameAssetManager().getSkin());
+        label.setWrap(true);
+        label.setAlignment(Align.center);
+        dialog.getContentTable().add(label).width(300).pad(20);
+        dialog.button("OK");
+        dialog.show(stage);
+    }
 
     @Override
     public void render(float delta) {

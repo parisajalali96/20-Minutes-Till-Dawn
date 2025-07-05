@@ -168,6 +168,7 @@ public class Player implements Serializable {
             weapon.update(delta);
             if (levelUpAnimation.isAnimationFinished(levelUpTimer)) {
                 levelUpAnimationActive = false;
+                Game.getGameView().setPaused(false);
                 levelUpTimer = 0f;
 
                 List<AbilityType> randomAbilities = GameController.get3RandomAbilities();
@@ -314,6 +315,7 @@ public class Player implements Serializable {
     public void goToNextLevel(){
         if(canGoToNextLevel()) {
             level++;
+           // Game.getGameView().setPaused(true);
             GameAssetManager.playSfx("levelUpUpgrade");
             levelUpAnimationActive = true;
             levelUpPosition.set(position);

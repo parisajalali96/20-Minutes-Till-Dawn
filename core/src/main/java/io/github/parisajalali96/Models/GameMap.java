@@ -40,7 +40,7 @@ public class GameMap implements Serializable {
     private boolean treesSpawned = false;
 
     // fog of war effect
-    private Texture fogGradientTexture;
+    private transient Texture fogGradientTexture;
 
 
     public GameMap() {
@@ -231,8 +231,6 @@ public class GameMap implements Serializable {
             fogWidth,
             fogHeight
         );
-
-
 
 
     }

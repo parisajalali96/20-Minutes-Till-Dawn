@@ -50,8 +50,8 @@ public class GameController {
     }
 
     //add HP
-    public void playerHPCheatCode() throws IOException {
-        if(Game.getCurrentPlayer().getHealth() == 0) Game.getCurrentPlayer().
+    public void playerHPCheatCode(int hearts) throws IOException {
+        if(hearts < 5) Game.getCurrentPlayer().
             addHealth(Game.getCurrentPlayer().getHero().getHP());
     }
 

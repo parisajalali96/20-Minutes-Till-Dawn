@@ -1,7 +1,10 @@
 package io.github.parisajalali96.Controllers;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import io.github.parisajalali96.Main;
 import io.github.parisajalali96.Models.*;
 import io.github.parisajalali96.Views.ForgotPassView;
@@ -42,6 +45,7 @@ public class LoginMenuController {
                 Result result = null;
                 try {
                     result = loginUser(username, password);
+                    System.out.println(result);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
